@@ -13,7 +13,6 @@ import CategoryPicker from './CategoryPicker'
 function HomeScreen() {
   return (
     <View style={styles.container}>
-      <Text>CS530 Home Screen</Text>
       <CategoryPicker />
       <StatusBar style="auto"/>
     </View>
