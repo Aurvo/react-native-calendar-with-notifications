@@ -6,10 +6,16 @@ import { NavigationContainer } from '@react-navigation/native';
 //imported for native stack
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import CategoryPicker from './CategoryPicker'
+
+
+
 function HomeScreen() {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={styles.container}>
       <Text>CS530 Home Screen</Text>
+      <CategoryPicker />
+      <StatusBar style="auto"/>
     </View>
   );
 }
