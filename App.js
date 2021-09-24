@@ -1,23 +1,37 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import React from "react";
+import { StyleSheet, Text, SafeAreaView, TouchableOpacity } from "react-native";
 //imported for React Navigation
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer } from "@react-navigation/native";
 //imported for native stack
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import CategoryPicker from './CategoryPicker'
+import CategoryPicker from "./CategoryPicker";
+import Admin from "./screens/Admin";
 
-
-
-function HomeScreen() {
+function HomeScreen({ navigation }) {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <CategoryPicker />
-      <StatusBar style="auto"/>
-    </View>
+      <StatusBar style="auto" />
+
+      <TouchableOpacity onPress={() => navigation.push("Admin")}>
+        <Text>Admin</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
+
+//////////////////////////////////////////////////
 
 const Stack = createNativeStackNavigator();
 
@@ -26,18 +40,10 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Admin" component={Admin} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
 export default App;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
