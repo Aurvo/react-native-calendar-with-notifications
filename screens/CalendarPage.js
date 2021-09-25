@@ -80,10 +80,10 @@ const styles = StyleSheet.create({
         marginTop: 16
     },
     header1: {
-        fontSize: '25px'
+        fontSize: 25
     },
     header2: {
-        fontSize: '20px'
+        fontSize: 20
     },
     bold: {
         fontWeight: 'bold'
