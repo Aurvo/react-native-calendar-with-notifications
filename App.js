@@ -8,6 +8,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import CategoryPicker from "./CategoryPicker";
 import Admin from "./screens/Admin";
+import CalendarPage from "./screens/CalendarPage";
 
 function HomeScreen({ navigation }) {
   return (
@@ -17,6 +18,9 @@ function HomeScreen({ navigation }) {
 
       <TouchableOpacity onPress={() => navigation.push("Admin")}>
         <Text>Admin</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.push("Calendar")}>
+        <Text>Calendar</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -31,8 +35,6 @@ const styles = StyleSheet.create({
   },
 });
 
-//////////////////////////////////////////////////
-
 const Stack = createNativeStackNavigator();
 
 function App() {
@@ -41,6 +43,7 @@ function App() {
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Admin" component={Admin} />
+        <Stack.Screen name="Calendar" component={CalendarPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );
