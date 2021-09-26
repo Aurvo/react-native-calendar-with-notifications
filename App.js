@@ -1,11 +1,10 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { Button, Text, View, StyleSheet, Text, SafeAreaView, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, SafeAreaView, TouchableOpacity } from "react-native";
 //imported for React Navigation
 import { NavigationContainer } from "@react-navigation/native";
 //imported for native stack
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-npm 
 import CategoryPicker from "./components/CategoryPicker";
 import Admin from "./screens/Admin";
 import CalendarPage from "./screens/CalendarPage";
