@@ -6,7 +6,7 @@ import { NavigationContainer } from "@react-navigation/native";
 //imported for native stack
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import CategoryPicker from "./CategoryPicker";
+import CategoryPicker from "./components/CategoryPicker";
 import Admin from "./screens/Admin";
 import CalendarPage from "./screens/CalendarPage";
 
