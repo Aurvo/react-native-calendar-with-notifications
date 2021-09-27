@@ -59,6 +59,7 @@ function App() {
       <Tab.Navigator>
         <Tab.Screen name="Home" component={HomeStackScreen} />
         <Tab.Screen name="Settings" component={SettingsStackScreen} />
+        <Tab.Screen name="Admin" component={Admin} />
       </Tab.Navigator>
     </NavigationContainer>
   );
