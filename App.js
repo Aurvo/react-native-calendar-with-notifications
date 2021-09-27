@@ -9,6 +9,7 @@ import Admin from "./screens/Admin";
 import CalendarPage from "./screens/CalendarPage";
 import SettingsPage from "./screens/SettingsPage";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const styles = StyleSheet.create({
   container: {
@@ -56,7 +57,29 @@ const Tab = createBottomTabNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
+      <Tab.Navigator screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+
+            if (route.name === 'Home') {
+              iconName = focused
+                ? 'home'
+                : 'home-outline';
+            } else if (route.name === 'Settings') {
+              iconName = focused ? 'settings' : 'settings-outline';
+              }  
+              else if (route.name === 'Admin') {
+                iconName = focused ? 'cloud-upload' : 'cloud-upload-outline';
+                }
+            
+
+            // You can return any component that you like here!
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: 'blue',
+          tabBarInactiveTintColor: 'gray',
+        })}
+      >
         <Tab.Screen name="Home" component={HomeStackScreen} />
         <Tab.Screen name="Settings" component={SettingsStackScreen} />
         <Tab.Screen name="Admin" component={Admin} />
