@@ -69,7 +69,7 @@ function App() {
               iconName = focused ? 'settings' : 'settings-outline';
               }  
               else if (route.name === 'Admin') {
-                iconName = focused ? 'cloud-upload' : 'cloud-upload-outline';
+                iconName = focused ? 'notifications-circle' : 'notifications-circle-outline';
                 }
             
 
