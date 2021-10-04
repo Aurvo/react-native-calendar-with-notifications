@@ -7,7 +7,6 @@ import {
   StyleSheet,
 } from "react-native";
 import CategoryPicker from "../components/CategoryPicker";
-import { getDatabase, ref, onValue } from 'firebase/database';
 import { getAuth, signInAnonymously } from "firebase/auth";
 
 const userCategories = ['Donor', 'Volunteer', 'Client','Host'];
@@ -28,22 +27,9 @@ setupHighscoreListener(userId) {const db = getDatabase();
     console.log("New high score: " + highscore);
   });
 }
-
-
 */
 
 const SettingsPage = () => {
-  const auth = getAuth();
-  signInAnonymously(auth)
-    .then(() => {
-    // Signed in..
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // ...
-    });
-
   return(
     <SafeAreaView>
       <Text style={styles.subheading}>Identify which group notifications you would like to receive.</Text>
