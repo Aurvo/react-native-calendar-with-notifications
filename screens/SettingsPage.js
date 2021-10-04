@@ -7,13 +7,43 @@ import {
   StyleSheet,
 } from "react-native";
 import CategoryPicker from "../components/CategoryPicker";
-
+import { getDatabase, ref, onValue } from 'firebase/database';
+import { getAuth, signInAnonymously } from "firebase/auth";
 
 const userCategories = ['Donor', 'Volunteer', 'Client','Host'];
 
+/*not sure where this goes but need to save user categories then need to retrieve them
+https://docs.expo.dev/guides/using-firebase/ 
+function storeHighScore(userId, score) {
+  const db = getDatabase();
+  const reference = ref(db, 'users/' + userId);
+  set(ref(db, 'users/' + userId), {
+    highscore: score,
+  });
+}
+setupHighscoreListener(userId) {const db = getDatabase();
+  const reference = ref(db, 'users/' + userId);
+  onValue(reference, (snapshot) => {
+    const highscore = snapshot.val().highscore;
+    console.log("New high score: " + highscore);
+  });
+}
 
+
+*/
 
 const SettingsPage = () => {
+  const auth = getAuth();
+  signInAnonymously(auth)
+    .then(() => {
+    // Signed in..
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // ...
+    });
+
   return(
     <SafeAreaView>
       <Text style={styles.subheading}>Identify which group notifications you would like to receive.</Text>
