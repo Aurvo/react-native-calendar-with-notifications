@@ -16,7 +16,6 @@ const app = firebase.initializeApp(firebaseConfig);
 const auth = app.auth();
 const db = app.firestore();
 
-//const autha = getAuth();
 
 signInAnonymously(auth)
   .then(() => {
@@ -32,4 +31,5 @@ signInAnonymously(auth)
   export {
     auth,
     db,
+    signInAnonymously
   };
