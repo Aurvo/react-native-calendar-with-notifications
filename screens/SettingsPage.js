@@ -1,5 +1,4 @@
 import React from "react";
-import { render } from "react-dom";
 import {
   SafeAreaView,
   View,
@@ -7,24 +6,23 @@ import {
   StyleSheet,
 } from "react-native";
 import CategoryPicker from "../components/CategoryPicker";
-import { getAuth, signInAnonymously } from "firebase/auth";
+import { auth } from "../firebaseconfig";
 
 const userCategories = ['Donor', 'Volunteer', 'Client','Host'];
 
-/*
-const auth = getAuth();
+  signIn = () => {
+    auth.signInAnonymously()
+      .then(() => {
 
-signInAnonymously(auth)
-  .then(() => {
-    // Signed in..
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // ...
-  });
-*/
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ...
+      });
+}
 
+signIn();
 /*not sure where this goes but need to save user categories then need to retrieve them
 https://docs.expo.dev/guides/using-firebase/ 
 function storeHighScore(userId, score) {
