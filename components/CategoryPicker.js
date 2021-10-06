@@ -5,7 +5,7 @@ import { View } from 'react-native';
 const userCategories = ['Donor', 'Volunteer', 'Client','Host'];
 
 class CategoryPicker extends Component {
-    state = {selectedCategories: []}
+    state = {selectedCategories: [this.props.selectedCategories]}
   
     onSelectionsChange = (selectedCategories) => {
       this.setState({selectedCategories})
@@ -22,5 +22,5 @@ class CategoryPicker extends Component {
       )
     }
   }
-
+// need to be able to save the user's categories here
   export default CategoryPicker;
