@@ -1,11 +1,7 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { Button, View, StyleSheet, Text, SafeAreaView, TouchableOpacity } from "react-native";
-//imported for React Navigation
+import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-//imported for native stack
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Admin from "./screens/Admin";
+import AdminPage from "./screens/Admin";
 import CalendarPage from "./screens/CalendarPage";
 import SettingsPage from "./screens/SettingsPage";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -20,39 +16,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const HomeStack = createNativeStackNavigator();
-
-function HomeStackScreen() {
-  return (
-    <HomeStack.Navigator
-      screenOptions={{
-        headerShown: false
-      }}
-    >  
-      <HomeStack.Screen name="Home" component={CalendarPage} />
-      <HomeStack.Screen name="Settings" component={SettingsPage} />
-    </HomeStack.Navigator>
-  );
-}
-
-const SettingsStack = createNativeStackNavigator();
-
-function SettingsStackScreen() {
-  return (
-    <SettingsStack.Navigator
-      screenOptions={{
-        headerShown: false
-      }}
-    >
-      <SettingsStack.Screen name="Settings" component={SettingsPage} />
-      <SettingsStack.Screen name="Admin" component={Admin} />
-    </SettingsStack.Navigator>
-  );
-}
-
 const Tab = createBottomTabNavigator();
 
-function App() {
+const App = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator screenOptions={({ route }) => ({
@@ -69,8 +35,6 @@ function App() {
               else if (route.name === 'Admin') {
                 iconName = focused ? 'notifications-circle' : 'notifications-circle-outline';
                 }
-            
-
             // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
           },
@@ -78,12 +42,13 @@ function App() {
           tabBarInactiveTintColor: 'gray',
         })}
       >
-        <Tab.Screen name="Home" component={HomeStackScreen} />
-        <Tab.Screen name="Settings" component={SettingsStackScreen} />
-        <Tab.Screen name="Admin" component={Admin} />
+        <Tab.Screen name="Home" component={CalendarPage} />
+        <Tab.Screen name="Settings" component={SettingsPage} />
+        <Tab.Screen name="Admin" component={AdminPage} />
       </Tab.Navigator>
     </NavigationContainer>
+
   );
-}
+};
 
 export default App;
