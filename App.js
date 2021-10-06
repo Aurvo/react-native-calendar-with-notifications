@@ -10,10 +10,6 @@ import CalendarPage from "./screens/CalendarPage";
 import SettingsPage from "./screens/SettingsPage";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {initializeApp} from 'firebase/app';
-import { getAuth, signInAnonymously } from "firebase/auth";
-import { auth, db} from "./firebase";
-
 
 const styles = StyleSheet.create({
   container: {

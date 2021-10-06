@@ -11,6 +11,20 @@ import { getAuth, signInAnonymously } from "firebase/auth";
 
 const userCategories = ['Donor', 'Volunteer', 'Client','Host'];
 
+/*
+const auth = getAuth();
+
+signInAnonymously(auth)
+  .then(() => {
+    // Signed in..
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // ...
+  });
+*/
+
 /*not sure where this goes but need to save user categories then need to retrieve them
 https://docs.expo.dev/guides/using-firebase/ 
 function storeHighScore(userId, score) {
