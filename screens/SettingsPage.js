@@ -6,7 +6,7 @@ import {
   StyleSheet,
 } from "react-native";
 import CategoryPicker from "../components/CategoryPicker";
-import { auth } from "../environment/config";
+import { auth } from "../firebaseconfig";
 
 const userCategories = ['Donor', 'Volunteer', 'Client','Host'];
 
