@@ -20,8 +20,6 @@ const styles = StyleSheet.create({
   },
 });
 
-
-
 const HomeStack = createNativeStackNavigator();
 
 function HomeStackScreen() {
