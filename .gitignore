@@ -14,3 +14,4 @@ web-build/
 
 package-lock.json
 firebase.js
+environment/config.js
