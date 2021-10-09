@@ -16,6 +16,7 @@
     "expo": "~42.0.1",
     "expo-status-bar": "~1.0.4",
     "firebase": "8.2.3",
+    "googleapis": "^88.2.0",
     "joi": "^17.4.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
