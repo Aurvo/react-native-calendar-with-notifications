@@ -61,8 +61,8 @@ const Admin = function Admin({ navigation }) {
             trackColor={{ true: "green" }}
           ></Switch>
         </View>
+        <EventScreen />
       </ScrollView>
-      <EventScreen />
     </View>
   );
 };

@@ -39,10 +39,10 @@ const AddEventScreen = () => {
     const submit = useCallback(() => {
         if (!name) {
             setErrorMessage('Name requried')
-        } else if (!start) {
-            setErrorMessage('Start requried')
-        } else if (!end) {
-            setErrorMessage('End requried')
+        } else if (!dateState.start) {
+            setErrorMessage('Start Date requried')
+        } else if (!dateState.end) {
+            setErrorMessage('End Date requried')
         } else {
             console.log('name:', name);
             console.log('description:', description);
@@ -77,13 +77,13 @@ const AddEventScreen = () => {
             <View style={styles.dateField}>
                 <Text style={styles.label}>Start Date:</Text>
                 <Pressable onPress={enableModalForStartDate}>
-                    <Text style={styles.dateText}>{dateState.start || 'none'}</Text>
+                    <Text style={styles.dateText}>{dateState.start && dateState.start.toString() || 'none'}</Text>
                 </Pressable>
             </View>
             <View style={styles.dateField}>
                 <Text style={styles.label}>End Date:</Text>
                 <Pressable onPress={enableModalForEndDate}>
-                    <Text style={styles.dateText}>{dateState.end || 'none'}</Text>
+                    <Text style={styles.dateText}>{dateState.end && dateState.end.toString() || 'none'}</Text>
                 </Pressable>
             </View>
             {errorMessage ? <View style={styles.errorBox}>
