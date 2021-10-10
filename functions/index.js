@@ -3,6 +3,7 @@ const OAuth2 = google.auth.OAuth2;
 const calendar = google.calendar("v3");
 const functions = require("firebase-functions");
 const googleCredentials = require("./credentials.json");
+const cors = require("cors")({origin: true});
 
 const ERROR_RESPONSE = {
   status: "500",
@@ -94,22 +95,24 @@ function getEvents(auth) {
 
 // eslint-disable-next-line max-len
 exports.getEventsFromCalendar = functions.https.onRequest((request, response) => {
-  const oAuth2Client = new OAuth2(
-      googleCredentials.web.client_id,
-      googleCredentials.web.client_secret,
-      googleCredentials.web.redirect_uris[0]
-  );
+  cors(request, response, () => {
+    const oAuth2Client = new OAuth2(
+        googleCredentials.web.client_id,
+        googleCredentials.web.client_secret,
+        googleCredentials.web.redirect_uris[0]
+    );
 
-  oAuth2Client.setCredentials({
-    refresh_token: googleCredentials.refresh_token,
-  });
+    oAuth2Client.setCredentials({
+      refresh_token: googleCredentials.refresh_token,
+    });
 
-  getEvents(oAuth2Client).then((data) => {
-    response.status(200).send(data);
-    return;
-  }).catch((err) => {
-    console.error("Error adding event: " + err.message);
-    response.status(500).send(ERROR_RESPONSE);
-    return;
+    getEvents(oAuth2Client).then((data) => {
+      response.status(200).send(data);
+      return;
+    }).catch((err) => {
+      console.error("Error adding event: " + err.message);
+      response.status(500).send(ERROR_RESPONSE);
+      return;
+    });
   });
 });
