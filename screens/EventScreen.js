@@ -44,6 +44,14 @@ const AddEventScreen = () => {
         } else if (!dateState.end) {
             setErrorMessage('End Date requried')
         } else {
+//            axios.get('https://us-central1-cs530-smith.cloudfunctions.net/addEventToCalendar', {
+//                eventName: name,
+//                description,
+//                startTime: dateState.start,
+//                endTime: dateState.end,
+//            }).then(res => {
+//                console.log(res);
+//            });
             console.log('name:', name);
             console.log('description:', description);
             console.log('start:', dateState.start);

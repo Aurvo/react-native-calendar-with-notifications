@@ -46,7 +46,7 @@ const SettingsPage = () => {
     <SafeAreaView>
       <Text style={styles.subheading}>Identify which group notifications you would like to receive.</Text>
       <View style={styles.subheading}>
-        <CategoryPicker selectedCategories= {[]} />
+        <CategoryPicker selectedCategories={[]} />
       </View>
     </SafeAreaView>
   );
