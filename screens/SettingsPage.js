@@ -10,7 +10,7 @@ import { auth } from "../firebaseconfig";
 
 const userCategories = ['Donor', 'Volunteer', 'Client','Host'];
 
-  signIn = () => {
+const signIn = () => {
     auth.signInAnonymously()
       .then(() => {
 
@@ -20,7 +20,7 @@ const userCategories = ['Donor', 'Volunteer', 'Client','Host'];
         const errorMessage = error.message;
         // ...
       });
-}
+};
 
 signIn();
 /*not sure where this goes but need to save user categories then need to retrieve them

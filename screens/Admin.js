@@ -8,6 +8,7 @@ import {
   StyleSheet,
 } from "react-native";
 import HorizontalDivider from "../components/HorizontalDivider";
+import EventScreen from './EventScreen';
 
 const Admin = function Admin({ navigation }) {
   const [isDonorEnabled, setDonor] = React.useState(false);
@@ -16,7 +17,7 @@ const Admin = function Admin({ navigation }) {
   const [isHostEnabled, setHost] = React.useState(false);
 
   return (
-    <SafeAreaView>
+    <View>
       <ScrollView>
         <Text style={styles.heading__lg}>Notifications</Text>
         <Text style={styles.subheading}>
@@ -61,7 +62,8 @@ const Admin = function Admin({ navigation }) {
           ></Switch>
         </View>
       </ScrollView>
-    </SafeAreaView>
+      <EventScreen />
+    </View>
   );
 };
 
