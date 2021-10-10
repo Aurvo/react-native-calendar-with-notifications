@@ -70,3 +70,46 @@ exports.addEventToCalendar = functions.https.onRequest((request, response) => {
     return;
   });
 });
+
+/**
+* Retrieve all calendar events
+* @param {string} auth for authentication.
+* @return {any} Promise on the event.
+*/
+function getEvents(auth) {
+  return new Promise(function(resolve, reject) {
+    calendar.events.list({
+      auth: auth,
+      calendarId: "primary",
+    }, (err, res) => {
+      if (err) {
+        console.log("Rejecting because of error");
+        reject(err);
+      }
+      console.log("Request successful");
+      resolve(res.data);
+    });
+  });
+}
+
+// eslint-disable-next-line max-len
+exports.getEventsFromCalendar = functions.https.onRequest((request, response) => {
+  const oAuth2Client = new OAuth2(
+      googleCredentials.web.client_id,
+      googleCredentials.web.client_secret,
+      googleCredentials.web.redirect_uris[0]
+  );
+
+  oAuth2Client.setCredentials({
+    refresh_token: googleCredentials.refresh_token,
+  });
+
+  getEvents(oAuth2Client).then((data) => {
+    response.status(200).send(data);
+    return;
+  }).catch((err) => {
+    console.error("Error adding event: " + err.message);
+    response.status(500).send(ERROR_RESPONSE);
+    return;
+  });
+});
