@@ -8,7 +8,7 @@ import {
   StyleSheet,
 } from "react-native";
 import HorizontalDivider from "../components/HorizontalDivider";
-import EventScreen from './EventScreen';
+import EventSection from './EventSection';
 
 const Admin = function Admin({ navigation }) {
   const [isDonorEnabled, setDonor] = React.useState(false);
@@ -61,7 +61,7 @@ const Admin = function Admin({ navigation }) {
             trackColor={{ true: "green" }}
           ></Switch>
         </View>
-        <EventScreen />
+        <EventSection />
       </ScrollView>
     </View>
   );

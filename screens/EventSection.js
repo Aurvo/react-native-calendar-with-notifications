@@ -1,8 +1,9 @@
 import React, {useState, useCallback} from 'react';
-import { StyleSheet, Text, View, Button, TextInput, Pressable } from 'react-native';
+import axios from 'axios';
+import { StyleSheet, Text, View, Button, TextInput, Pressable, Alert } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
-const AddEventScreen = () => {
+const AddEventSection = () => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [dateState, setDateState] = useState({
@@ -44,18 +45,20 @@ const AddEventScreen = () => {
         } else if (!dateState.end) {
             setErrorMessage('End Date requried')
         } else {
-//            axios.get('https://us-central1-cs530-smith.cloudfunctions.net/addEventToCalendar', {
-//                eventName: name,
-//                description,
-//                startTime: dateState.start,
-//                endTime: dateState.end,
-//            }).then(res => {
-//                console.log(res);
-//            });
-            console.log('name:', name);
-            console.log('description:', description);
-            console.log('start:', dateState.start);
-            console.log('end:', dateState.end);
+            axios.post('https://us-central1-cs530-smith.cloudfunctions.net/addEventToCalendar', {
+                eventName: name,
+                description: description,
+                startTime: (new Date(dateState.start)).toJSON(),
+                endTime: (new Date(dateState.end)).toJSON(),
+            }).then(res => {
+                console.log('success');
+                Alert.alert(
+                    'Success',
+                    'Your event is on the cloud!',
+                    { text: "Great!"}
+                )
+                console.log(res);
+            }).catch(er => console.log(er));
             if (errorMessage) {
                 setErrorMessage('');
             }
@@ -148,4 +151,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AddEventScreen;
+export default AddEventSection;
