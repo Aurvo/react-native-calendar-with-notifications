@@ -8,8 +8,6 @@ import {
 import CategoryPicker from "../components/CategoryPicker";
 import { auth } from "../firebaseconfig";
 
-const userCategories = ['Donor', 'Volunteer', 'Client','Host'];
-
 const signIn = () => {
     auth.signInAnonymously()
       .then(() => {
@@ -46,7 +44,7 @@ const SettingsPage = () => {
     <SafeAreaView>
       <Text style={styles.subheading}>Identify which group notifications you would like to receive.</Text>
       <View style={styles.subheading}>
-        <CategoryPicker selectedCategories={[]} />
+        <CategoryPicker />
       </View>
     </SafeAreaView>
   );
