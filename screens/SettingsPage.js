@@ -10,7 +10,7 @@ import { auth } from "../firebaseconfig";
 
 const userCategories = ['Donor', 'Volunteer', 'Client','Host'];
 
-  signIn = () => {
+const signIn = () => {
     auth.signInAnonymously()
       .then(() => {
 
@@ -20,7 +20,7 @@ const userCategories = ['Donor', 'Volunteer', 'Client','Host'];
         const errorMessage = error.message;
         // ...
       });
-}
+};
 
 signIn();
 /*not sure where this goes but need to save user categories then need to retrieve them
@@ -46,7 +46,7 @@ const SettingsPage = () => {
     <SafeAreaView>
       <Text style={styles.subheading}>Identify which group notifications you would like to receive.</Text>
       <View style={styles.subheading}>
-        <CategoryPicker selectedCategories= {[]} />
+        <CategoryPicker selectedCategories={[]} />
       </View>
     </SafeAreaView>
   );
