@@ -41,6 +41,9 @@ setupHighscoreListener(userId) {const db = getDatabase();
 }
 */
 
+
+
+
 const SettingsPage = () => {
   return(
     <SafeAreaView>

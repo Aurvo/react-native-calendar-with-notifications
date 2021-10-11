@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import SelectMultiple from 'react-native-select-multiple';
 import { View } from 'react-native';
+import { auth,db } from "../firebaseconfig";
+import { collection, addDoc } from "firebase/firestore";
 
 const userCategories = ['Donor', 'Volunteer', 'Client','Host'];
 
@@ -22,5 +24,15 @@ class CategoryPicker extends Component {
       )
     }
   }
-// need to be able to save the user's categories here
+
+  try {
+    const docRef = db.addDoc(collection(db, "userSelectedCategories"), {
+      userID: auth.currentUser.uid,
+      categories: this.state.selectedCategories
+    });
+    console.log("Document written with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+
   export default CategoryPicker;
