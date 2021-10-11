@@ -46,29 +46,31 @@ function addEvent(event, auth) {
 }
 
 exports.addEventToCalendar = functions.https.onRequest((request, response) => {
-  const eventData = {
-    eventName: request.body.eventName,
-    description: request.body.description,
-    startTime: request.body.startTime,
-    endTime: request.body.endTime,
-  };
-  const oAuth2Client = new OAuth2(
-      googleCredentials.web.client_id,
-      googleCredentials.web.client_secret,
-      googleCredentials.web.redirect_uris[0]
-  );
+  cors(request, response, () => {
+    const eventData = {
+      eventName: request.body.eventName,
+      description: request.body.description,
+      startTime: request.body.startTime,
+      endTime: request.body.endTime,
+    };
+    const oAuth2Client = new OAuth2(
+        googleCredentials.web.client_id,
+        googleCredentials.web.client_secret,
+        googleCredentials.web.redirect_uris[0]
+    );
 
-  oAuth2Client.setCredentials({
-    refresh_token: googleCredentials.refresh_token,
-  });
+    oAuth2Client.setCredentials({
+      refresh_token: googleCredentials.refresh_token,
+    });
 
-  addEvent(eventData, oAuth2Client).then((data) => {
-    response.status(200).send(data);
-    return;
-  }).catch((err) => {
-    console.error("Error adding event: " + err.message);
-    response.status(500).send(ERROR_RESPONSE);
-    return;
+    addEvent(eventData, oAuth2Client).then((data) => {
+      response.status(200).send(data);
+      return;
+    }).catch((err) => {
+      console.error("Error adding event: " + err.message);
+      response.status(500).send(ERROR_RESPONSE);
+      return;
+    });
   });
 });
 
