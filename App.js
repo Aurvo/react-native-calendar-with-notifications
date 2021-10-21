@@ -1,11 +1,14 @@
 import React from "react";
 import { StyleSheet } from "react-native";
+
 import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import { globalContextWrapper } from './contexts/GlobalContext';
 import AdminPage from "./screens/Admin";
 import CalendarPage from "./screens/CalendarPage";
 import SettingsPage from "./screens/SettingsPage";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const styles = StyleSheet.create({
   container: {
@@ -51,4 +54,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default globalContextWrapper(App);
