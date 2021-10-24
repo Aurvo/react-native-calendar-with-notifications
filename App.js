@@ -9,6 +9,7 @@ import { globalContextWrapper } from './contexts/GlobalContext';
 import AdminPage from "./screens/Admin";
 import CalendarPage from "./screens/CalendarPage";
 import SettingsPage from "./screens/SettingsPage";
+import LoginScreen from "./screen/LoginScreen";
 
 const styles = StyleSheet.create({
   container: {
@@ -47,7 +48,7 @@ const App = () => {
       >
         <Tab.Screen name="Home" component={CalendarPage} />
         <Tab.Screen name="Settings" component={SettingsPage} />
-        <Tab.Screen name="Admin" component={AdminPage} />
+        <Tab.Screen name="Admin" component={LoginScreen} />
       </Tab.Navigator>
     </NavigationContainer>
 
