@@ -27,7 +27,11 @@ const AdminStack = createNativeStackNavigator();
 
 function AdminStackScreen() {
   return (
-    <AdminStack.Navigator>
+    <AdminStack.Navigator
+      screenOptions={{
+        headerShown: false
+      }} 
+    >
       <AdminStack.Screen name="Login" component={LoginScreen} />
       <AdminStack.Screen name="AdminFunctions" component={AdminPage} />
     </AdminStack.Navigator>

@@ -14,7 +14,7 @@ const LoginScreen = () => {
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
-          if (user) {
+          if (user.email.length>0) {
             navigation.replace('AdminFunctions')
           }
         })
