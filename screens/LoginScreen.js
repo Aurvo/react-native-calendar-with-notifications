@@ -1,18 +1,21 @@
-import { NavigationRouteContext } from '@react-navigation/native'
-import React from 'react'
-import { KeyboardAvoidingView, Stylesheet, Text, View } from 'react-native'
+import {useNavigation} from '@react-navigation/native'
+import React, {useEffect, useState} from 'react'
+import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native'
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler'
 import { auth } from '../firebaseconfig'
+
 
 const LoginScreen = () => {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
+    const navigation = useNavigation()
+
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
           if (user) {
-            navigation.replace("Admin")
+            navigation.replace('AdminFunctions')
           }
         })
     
@@ -62,7 +65,7 @@ const LoginScreen = () => {
     )
 }
 
-export default LoginScreen
+export default LoginScreen;
 
 const styles = StyleSheet.create({
     container: {
