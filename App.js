@@ -3,12 +3,14 @@ import { StyleSheet } from "react-native";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { globalContextWrapper } from './contexts/GlobalContext';
 import AdminPage from "./screens/Admin";
 import CalendarPage from "./screens/CalendarPage";
 import SettingsPage from "./screens/SettingsPage";
+import LoginScreen from "./screens/LoginScreen";
 
 const styles = StyleSheet.create({
   container: {
@@ -20,6 +22,21 @@ const styles = StyleSheet.create({
 });
 
 const Tab = createBottomTabNavigator();
+
+const AdminStack = createNativeStackNavigator();
+
+function AdminStackScreen() {
+  return (
+    <AdminStack.Navigator
+      screenOptions={{
+        headerShown: false
+      }} 
+    >
+      <AdminStack.Screen name="Login" component={LoginScreen} />
+      <AdminStack.Screen name="AdminFunctions" component={AdminPage} />
+    </AdminStack.Navigator>
+  );
+}
 
 const App = () => {
   return (
@@ -47,7 +64,7 @@ const App = () => {
       >
         <Tab.Screen name="Home" component={CalendarPage} />
         <Tab.Screen name="Settings" component={SettingsPage} />
-        <Tab.Screen name="Admin" component={AdminPage} />
+        <Tab.Screen name="Admin" component={AdminStackScreen} />
       </Tab.Navigator>
     </NavigationContainer>
 
