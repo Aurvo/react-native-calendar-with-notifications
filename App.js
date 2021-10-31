@@ -63,7 +63,7 @@ const App = () => {
           tabBarInactiveTintColor: "gray",
         })}
       >
-        <Tab.Screen name="Notifications" component={NotificationsPage} />
+        {/* <Tab.Screen name="Notifications" component={NotificationsPage} /> */}
         <Tab.Screen name="Home" component={CalendarPage} />
         <Tab.Screen name="Settings" component={SettingsPage} />
         <Tab.Screen name="Admin" component={AdminStackScreen} />

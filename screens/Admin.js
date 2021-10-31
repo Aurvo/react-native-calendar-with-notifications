@@ -1,13 +1,7 @@
 import React from "react";
-import {
-  SafeAreaView,
-  ScrollView,
-  View,
-  Text,
-  Switch,
-  StyleSheet,
-} from "react-native";
+import { ScrollView, View, Text, Switch, StyleSheet } from "react-native";
 import HorizontalDivider from "../components/HorizontalDivider";
+import SendMessage from "../components/SendMessage";
 
 const Admin = function Admin({ navigation }) {
   const [isDonorEnabled, setDonor] = React.useState(false);
@@ -60,6 +54,15 @@ const Admin = function Admin({ navigation }) {
             trackColor={{ true: "green" }}
           ></Switch>
         </View>
+
+        <HorizontalDivider />
+
+        <Text style={[styles.group__item_text, { padding: 10 }]}>
+          Send Push Notification To Subscribers
+        </Text>
+        <SendMessage />
+
+        <HorizontalDivider />
       </ScrollView>
     </View>
   );
