@@ -11,6 +11,7 @@ import AdminPage from "./screens/Admin";
 import CalendarPage from "./screens/CalendarPage";
 import SettingsPage from "./screens/SettingsPage";
 import LoginScreen from "./screens/LoginScreen";
+import NotificationsPage from "./screens/NotificationsPage"
 
 const styles = StyleSheet.create({
   container: {
@@ -49,12 +50,16 @@ const App = () => {
               iconName = focused
                 ? 'home'
                 : 'home-outline';
-            } else if (route.name === 'Settings') {
+            } 
+            else if (route.name === 'Settings') {
               iconName = focused ? 'settings' : 'settings-outline';
-              }  
-              else if (route.name === 'Admin') {
-                iconName = focused ? 'notifications-circle' : 'notifications-circle-outline';
-                }
+            }  
+            else if (route.name === 'Admin') {
+              iconName = focused ? 'notifications-circle' : 'notifications-circle-outline';
+            }
+            else if (route.name === 'Notifications') {
+              iconName = focused ? 'notifications-circle' : 'notifications-circle-outline';
+            }
             // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
           },
@@ -62,9 +67,11 @@ const App = () => {
           tabBarInactiveTintColor: 'gray',
         })}
       >
+        <Tab.Screen name="Notifications" component={NotificationsPage} />
         <Tab.Screen name="Home" component={CalendarPage} />
         <Tab.Screen name="Settings" component={SettingsPage} />
         <Tab.Screen name="Admin" component={AdminStackScreen} />
+
       </Tab.Navigator>
     </NavigationContainer>
 
