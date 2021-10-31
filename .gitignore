@@ -16,3 +16,4 @@ package-lock.json
 firebase.js
 environment/config.js
 firebaseconfig.js
+functions/credentials.js
