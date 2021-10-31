@@ -1,12 +1,14 @@
 import React from "react";
 import {
   SafeAreaView,
+  ScrollView,
   View,
   Text,
   StyleSheet,
 } from "react-native";
 import CategoryPicker from "../components/CategoryPicker";
 import { auth } from "../firebaseconfig";
+import EventSection from './EventSection';
 
 const signIn = () => {
     auth.signInAnonymously()
@@ -41,12 +43,13 @@ setupHighscoreListener(userId) {const db = getDatabase();
 
 const SettingsPage = () => {
   return(
-    <SafeAreaView>
+    <ScrollView>
       <Text style={styles.subheading}>Identify which group notifications you would like to receive.</Text>
       <View style={styles.subheading}>
         <CategoryPicker />
       </View>
-    </SafeAreaView>
+      <EventSection />
+    </ScrollView>
   );
 }
 
