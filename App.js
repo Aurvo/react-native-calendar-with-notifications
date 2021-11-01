@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { globalContextWrapper } from "./contexts/GlobalContext";
-import AdminPage from "./screens/Admin";
+import AdminPage from "./screens/AdminPage";
 import CalendarPage from "./screens/CalendarPage";
 import SettingsPage from "./screens/SettingsPage";
 import LoginScreen from "./screens/LoginScreen";
