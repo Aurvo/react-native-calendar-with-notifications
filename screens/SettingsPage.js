@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import CategoryPicker from "../components/CategoryPicker";
 import { auth } from "../firebaseconfig";
-import EventSection from './EventSection';
+
 
 const signIn = () => {
     auth.signInAnonymously()
@@ -48,7 +48,7 @@ const SettingsPage = () => {
       <View style={styles.subheading}>
         <CategoryPicker />
       </View>
-      <EventSection />
+      
     </ScrollView>
   );
 }
