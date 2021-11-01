@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Button, TextInput, StyleSheet } from "react-native";
-import RegisterExpoToken from "./RegisterExpoToken";
+import RegisterExpoToken from "../helpers/RegisterExpoToken";
 
 const MessageContent = (props) => {
   return (
@@ -13,7 +13,7 @@ const MessageContent = (props) => {
 };
 
 const SendMessage = () => {
-  const [messageBody, setMessageBody] = useState("Type content here...");
+  const [messageBody, setMessageBody] = useState("");
   const expoPushToken = RegisterExpoToken();
 
   // If you type something in the text box that is a color, the background will change to that
@@ -25,6 +25,8 @@ const SendMessage = () => {
           multiline
           numberOfLines={4}
           onChangeText={(messageBody) => setMessageBody(messageBody)}
+          placeholder="Type content here..."
+          onFocus={(e) => (e.target.placeholder = "")}
           value={messageBody}
           style={styles.input}
         />
