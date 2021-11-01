@@ -2,6 +2,7 @@ import React from "react";
 import { ScrollView, View, Text, Switch, StyleSheet } from "react-native";
 import HorizontalDivider from "../components/HorizontalDivider";
 import SendMessage from "../components/SendMessage";
+import EventSection from './EventSection';
 
 const Admin = function Admin({ navigation }) {
   const [isDonorEnabled, setDonor] = React.useState(false);
@@ -62,6 +63,8 @@ const Admin = function Admin({ navigation }) {
         </Text>
         <SendMessage />
 
+        <HorizontalDivider />
+        <EventSection />
         <HorizontalDivider />
       </ScrollView>
     </View>
