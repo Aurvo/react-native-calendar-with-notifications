@@ -40,7 +40,6 @@ const CalendarPage = () => {
         }
     }, [shouldRefreshEvents]);
     return (<ScrollView>
-        <Text>Calendar</Text>
         <Calendar
             onDayPress={updateSselectedDay}
             minDate={'1970-01-01'}
@@ -48,14 +47,14 @@ const CalendarPage = () => {
             markedDates={allEventState.markedDates}
             hideArrows={false}
         />
-        {dayState.selectedDay && <View>
+        {dayState.selectedDay && <View style={styles.eventsSection}>
             <Text style={styles.header1}>Events for {dayState.selectedDay.dateString}</Text>
             {dayState.events.length > 0 ? 
             dayState.events.map(e => <View key={e.id} style={styles.eventItem}>
                 <Text style={styles.header2}>{e.summary}</Text>
-                <Text><Text style={styles.bold}>Start:</Text> {new Date(e.start).toString().substr(0, 21)}</Text>
-                <Text><Text style={styles.bold}>End:</Text> {new Date(e.end).toString().substr(0, 21)}</Text>
-                <Text><Text style={styles.bold}>Description:</Text> {e.description}</Text>
+                <Text style={styles.eventField}><Text style={styles.bold}>Start:</Text> {new Date(e.start).toString().substr(0, 21)}</Text>
+                <Text style={styles.eventField}><Text style={styles.bold}>End:</Text> {new Date(e.end).toString().substr(0, 21)}</Text>
+                <Text style={styles.eventField}><Text style={styles.bold}>Description:</Text> {e.description}</Text>
             </View>) :
             <Text>No events for this day</Text>}
         </View>}
@@ -63,14 +62,24 @@ const CalendarPage = () => {
 };
 
 const styles = StyleSheet.create({
+    eventsSection: {
+        marginLeft: 10,
+        marginRight: 5
+    },
     eventItem: {
-        marginTop: 16
+        marginTop: 16,
+        padding: 10,
+        borderRadius: 10,
+        backgroundColor: '#88aaff'
     },
     header1: {
         fontSize: 25
     },
     header2: {
         fontSize: 20
+    },
+    eventField: {
+        fontSize: 15
     },
     bold: {
         fontWeight: 'bold'

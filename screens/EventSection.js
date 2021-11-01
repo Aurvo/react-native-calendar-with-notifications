@@ -119,13 +119,15 @@ const AddEventSection = () => {
 const styles = StyleSheet.create({
     eventForm: {
         flex: 1,
-        fontSize: 20
+        paddingLeft: 10,
+        paddingRight: 10
     },
     input: {
         borderColor: 'grey',
         borderWidth: 1,
         borderRadius: 20,
         height: 40,
+        fontSize: 15,
         justifyContent: 'center',
         padding: 10,
         marginTop: 10,
@@ -142,10 +144,12 @@ const styles = StyleSheet.create({
     },
     label: {
         fontWeight: 'bold',
-        marginRight: 10
+        marginRight: 10,
+        fontSize: 15
     },
     dateText: {
-        color: 'blue'
+        color: 'blue',
+        fontSize: 15
     },
     errorBox: {
         textAlign: 'center',
