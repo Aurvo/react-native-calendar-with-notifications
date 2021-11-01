@@ -1,18 +1,9 @@
 import React from "react";
-import {
-  ScrollView,
-  SafeAreaView,
-  View,
-  Text,
-  Switch,
-  StyleSheet,
-} from "react-native";
+import { ScrollView, View, Text, StyleSheet } from "react-native";
 import SendMessage from "../components/SendMessage";
-<<<<<<< HEAD:screens/AdminPage.js
 import CategoryToggler from "../components/CategoryToggler";
-=======
-import EventSection from './EventSection';
->>>>>>> accd5dcd819c3d636280faca3711980ab355cf9f:screens/Admin.js
+import EventSection from "./EventSection";
+import HorizontalDivider from "../components/HorizontalDivider";
 
 const AdminPage = () => {
   // const [isDonorEnabled, setDonor] = React.useState(false);
@@ -75,13 +66,10 @@ const AdminPage = () => {
           Message To Subscribers
         </Text>
         <SendMessage />
-<<<<<<< HEAD:screens/AdminPage.js
-=======
 
         <HorizontalDivider />
         <EventSection />
         <HorizontalDivider />
->>>>>>> accd5dcd819c3d636280faca3711980ab355cf9f:screens/Admin.js
       </ScrollView>
     </View>
   );
