@@ -1,3 +1,4 @@
+import { getExpoPushTokenAsync } from "expo-notifications";
 import React from "react";
 import {
   SafeAreaView,
@@ -24,43 +25,24 @@ const signIn = () => {
 
 signIn();
 
-
-const writeToken = () => {
- 
-  const expoPushToken = RegisterExpoToken();
-
-  db.collection("user_pushId").where('uid',"==",auth.currentUser.uid).get().then((querySnapshot) => {
-    const countOfMatchingDocs = querySnapshot.size;
-    
-
-    querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        console.log(doc.id, " => ", doc.data());
-    });
-    
-    if(countOfMatchingDocs==0) {
-      db.collection("user_pushId").add({
-        pushToken: expoPushToken,
+const writePushToken = (props) => {
+  db.collection("user_pushId").where('uid',"==",auth.currentUser.uid).get().then((querySnapshot) => { 
+      db.collection("user_pushId").doc(auth.currentUser.uid).set({
+        pushToken: props,
         uid: auth.currentUser.uid
       })
-    }
-  })
-  .catch((error) => {
-    console.log("Error getting documents: ", error);
   });
-  
-  
 };
 
+
 const SettingsPage = () => {
-  writeToken();
+  writePushToken(RegisterExpoToken());
   return(
     <ScrollView>
       <Text style={styles.subheading}>Identify which group notifications you would like to receive.</Text>
       <View style={styles.subheading}>
         <CategoryPicker />
       </View>
-      
     </ScrollView>
   );
 }
