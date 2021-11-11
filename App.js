@@ -12,6 +12,7 @@ import CalendarPage from "./screens/CalendarPage";
 import SettingsPage from "./screens/SettingsPage";
 import LoginScreen from "./screens/LoginScreen";
 import NotificationsPage from "./screens/NotificationsPage";
+import TestPage2 from "./screens/TestPage2";
 
 const styles = StyleSheet.create({
   container: {
@@ -64,6 +65,7 @@ const App = () => {
         })}
       >
         {/* <Tab.Screen name="Notifications" component={NotificationsPage} /> */}
+        <Tab.Screen name="Test2" component={TestPage2} />
         <Tab.Screen name="Home" component={CalendarPage} />
         <Tab.Screen name="Settings" component={SettingsPage} />
         <Tab.Screen name="Admin" component={AdminStackScreen} />

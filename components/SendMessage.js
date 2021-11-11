@@ -43,7 +43,12 @@ const SendMessage = () => {
   // Can use this function below, OR use Expo's Push Notification Tool-> https://expo.dev/notifications
   async function sendPushNotification(expoPushToken) {
     const message = {
-      to: expoPushToken,
+      // to: expoPushToken,
+      to: [
+        "ExponentPushToken[DlGkoFEgL_4PBq9t3XNY_Q]",
+        "ExponentPushToken[04VMQpAqvBUBCuGk5u_05e]",
+        "ExponentPushToken[sp1cZBAXJQUF8m_ikoBUWb]",
+      ],
       sound: "default",
       title: "Message from Charity",
       body: messageBody,
