@@ -1,3 +1,4 @@
+import { getExpoPushTokenAsync } from "expo-notifications";
 import React from "react";
 import {
   SafeAreaView,
@@ -7,8 +8,8 @@ import {
   StyleSheet,
 } from "react-native";
 import CategoryPicker from "../components/CategoryPicker";
-import { auth } from "../firebaseconfig";
-
+import { db, auth } from "../firebaseconfig";
+import RegisterExpoToken from "../helpers/RegisterExpoToken";
 
 const signIn = () => {
     auth.signInAnonymously()
@@ -23,32 +24,25 @@ const signIn = () => {
 };
 
 signIn();
-/*not sure where this goes but need to save user categories then need to retrieve them
-https://docs.expo.dev/guides/using-firebase/ 
-function storeHighScore(userId, score) {
-  const db = getDatabase();
-  const reference = ref(db, 'users/' + userId);
-  set(ref(db, 'users/' + userId), {
-    highscore: score,
+
+const writePushToken = (props) => {
+  db.collection("user_pushId").where('uid',"==",auth.currentUser.uid).get().then((querySnapshot) => { 
+      db.collection("user_pushId").doc(auth.currentUser.uid).set({
+        pushToken: props,
+        uid: auth.currentUser.uid
+      })
   });
-}
-setupHighscoreListener(userId) {const db = getDatabase();
-  const reference = ref(db, 'users/' + userId);
-  onValue(reference, (snapshot) => {
-    const highscore = snapshot.val().highscore;
-    console.log("New high score: " + highscore);
-  });
-}
-*/
+};
+
 
 const SettingsPage = () => {
+  writePushToken(RegisterExpoToken());
   return(
     <ScrollView>
       <Text style={styles.subheading}>Identify which group notifications you would like to receive.</Text>
       <View style={styles.subheading}>
         <CategoryPicker />
       </View>
-      
     </ScrollView>
   );
 }
