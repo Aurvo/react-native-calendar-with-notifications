@@ -1,20 +1,15 @@
 import React from "react";
-import {
-  SafeAreaView,
-  ScrollView,
-  View,
-  Text,
-  Switch,
-  StyleSheet,
-} from "react-native";
+import { ScrollView, View, Text, StyleSheet } from "react-native";
+import SendMessage from "../components/SendMessage";
+import CategoryToggler from "../components/CategoryToggler";
+import EventSection from "./EventSection";
 import HorizontalDivider from "../components/HorizontalDivider";
-import EventSection from './EventSection';
 
-const Admin = function Admin({ navigation }) {
-  const [isDonorEnabled, setDonor] = React.useState(false);
-  const [isVolunteerEnabled, setVolunteer] = React.useState(false);
-  const [isClientEnabled, setClient] = React.useState(false);
-  const [isHostEnabled, setHost] = React.useState(false);
+const AdminPage = () => {
+  // const [isDonorEnabled, setDonor] = React.useState(false);
+  // const [isVolunteerEnabled, setVolunteer] = React.useState(false);
+  // const [isClientEnabled, setClient] = React.useState(false);
+  // const [isHostEnabled, setHost] = React.useState(false);
 
   return (
     <View>
@@ -24,9 +19,12 @@ const Admin = function Admin({ navigation }) {
           Turn on or off the push notifications that are sent to each
           subscription group.
         </Text>
-        <View style={styles.group}>
+
+        <CategoryToggler />
+
+        {/* <View style={styles.group}>
           <Text style={styles.group__item_text}>Donor</Text>
-          <View style={[styles.group__item_text, { flexDirection: "row" }]}>
+          <View style={styles.group__item_text}>
             <Switch
               value={isDonorEnabled}
               onValueChange={(value) => setDonor(value)}
@@ -60,8 +58,18 @@ const Admin = function Admin({ navigation }) {
             onValueChange={(value) => setHost(value)}
             trackColor={{ true: "green" }}
           ></Switch>
-        </View>
+        </View> */}
+
+        {/* <HorizontalDivider /> */}
+
+        <Text style={[styles.group__item_text, { padding: 10 }]}>
+          Message To Subscribers
+        </Text>
+        <SendMessage />
+
+        <HorizontalDivider />
         <EventSection />
+        <HorizontalDivider />
       </ScrollView>
     </View>
   );
@@ -91,4 +99,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Admin;
+export default AdminPage;

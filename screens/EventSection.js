@@ -1,9 +1,11 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useContext} from 'react';
 import axios from 'axios';
 import { StyleSheet, Text, View, Button, TextInput, Pressable, Alert } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import {GlobalContext} from '../contexts/GlobalContext';
 
 const AddEventSection = () => {
+    const {setShouldRefreshEvents} = useContext(GlobalContext);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [dateState, setDateState] = useState({
@@ -38,6 +40,12 @@ const AddEventSection = () => {
     }), [dateState]);
 
     const submit = useCallback(() => {
+        // axios.post('https://us-central1-cs530-smith.cloudfunctions.net/addEventToCalendar', {
+        //     eventName: "Firebase Event",
+        //     description: "This is a sample description",
+        //     startTime: "2021-10-31T10:00:00",
+        //     endTime: "2021-10-31T13:00:00"
+        // }).then(res => console.log('success')).catch(err => console.log(error))
         if (!name) {
             setErrorMessage('Name requried')
         } else if (!dateState.start) {
@@ -51,14 +59,14 @@ const AddEventSection = () => {
                 startTime: (new Date(dateState.start)).toJSON(),
                 endTime: (new Date(dateState.end)).toJSON(),
             }).then(res => {
-                console.log('success');
+                console.log('post successful');
                 Alert.alert(
                     'Success',
                     'Your event is on the cloud!',
-                    { text: "Great!"}
+                    [{text: 'Great!'}]
                 )
-                console.log(res);
-            }).catch(er => console.log(er));
+                setShouldRefreshEvents(true);
+            }).catch(er => console.log('error', er));
             if (errorMessage) {
                 setErrorMessage('');
             }
@@ -111,13 +119,15 @@ const AddEventSection = () => {
 const styles = StyleSheet.create({
     eventForm: {
         flex: 1,
-        fontSize: 20
+        paddingLeft: 10,
+        paddingRight: 10
     },
     input: {
         borderColor: 'grey',
         borderWidth: 1,
         borderRadius: 20,
         height: 40,
+        fontSize: 15,
         justifyContent: 'center',
         padding: 10,
         marginTop: 10,
@@ -134,10 +144,12 @@ const styles = StyleSheet.create({
     },
     label: {
         fontWeight: 'bold',
-        marginRight: 10
+        marginRight: 10,
+        fontSize: 15
     },
     dateText: {
-        color: 'blue'
+        color: 'blue',
+        fontSize: 15
     },
     errorBox: {
         textAlign: 'center',

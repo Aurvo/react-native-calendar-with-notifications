@@ -7,7 +7,8 @@ export const globalContextWrapper = (WrappedComponent) => {
     return class GlobalContextWrapper extends React.Component {
         state = {
             categories: [],
-            userSelectedCategories: []
+            userSelectedCategories: [],
+            shouldRefreshEvents: true
         }
           
         componentDidMount() {
@@ -17,8 +18,8 @@ export const globalContextWrapper = (WrappedComponent) => {
                     const data = doc.data()
                     categories.push({label: data.name, value: data.id})
                 });
+                console.log('auth', auth);
                 const uid = auth.currentUser.uid;
-                console.log('uid', uid);
                 const userSelectedCategories = [];
                 db.collection("user_categories").where('uid', '==', uid).get().then(uCatsSnapshot => {
                     uCatsSnapshot.forEach(doc => {
@@ -58,12 +59,16 @@ export const globalContextWrapper = (WrappedComponent) => {
             }
         }
 
+        setShouldRefreshEvents = shouldRefreshEvents => this.setState({shouldRefreshEvents})
+
         render() {
-            const {categories, userSelectedCategories} = this.state;
+            const {categories, userSelectedCategories, shouldRefreshEvents} = this.state;
             return (<GlobalContext.Provider value={{
                 categories,
                 userSelectedCategories,
-                onSelectionChange: this.onSelectionChange
+                onSelectionChange: this.onSelectionChange,
+                shouldRefreshEvents,
+                setShouldRefreshEvents: this.setShouldRefreshEvents
             }}>
                 <WrappedComponent {...this.props} />
             </GlobalContext.Provider>);
