@@ -39,24 +39,18 @@ const SendMessage = () => {
       var findItem = netTargetUids.indexOf(value);
       if (findItem == -1) {
         netTargetUids.push(value);
-        console.log("41");
       }
     });
     console.log(netTargetUids);
-    console.log("44");
     netTargetUids.forEach( value => {
       db.collection("user_pushId").where('uid','==',value).onSnapshot(nTUSnapshot => {
      
       nTUSnapshot.forEach(value => {
           const data = value.data()
           targetTokens.push(data.pushToken)
-          console.log(data.pushToken)
-          var findItem = netTargetTokens.indexOf(data);
-          console.log("53)");
+          var findItem = netTargetTokens.indexOf(data.pushToken);
           if (findItem == -1) {
             netTargetTokens.push(data.pushToken);
-            console.log("55");
-            console.log(data.pushToken);
           }
       });
     });
