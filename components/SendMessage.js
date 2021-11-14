@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Button, TextInput, StyleSheet } from "react-native";
 import RegisterExpoToken from "../helpers/RegisterExpoToken";
 import { db, auth } from '../firebaseconfig';
@@ -13,6 +13,7 @@ const MessageContent = (props) => {
   );
 };
 
+
 const SendMessage = () => {
   const [messageBody, setMessageBody] = useState("");
   //gotta get the context for this part instead , const [targetCategories, setTargetCategories] = 
@@ -26,6 +27,7 @@ const SendMessage = () => {
   const targetTokens = [];
   const netTargetTokens = [];
 
+  useEffect(() => {
   const {uid} = db.collection("user_categories").where('category_id','in',targetCategories).onSnapshot(ucatsSnapshot => {
     
     ucatsSnapshot.forEach(doc => {
@@ -49,17 +51,18 @@ const SendMessage = () => {
       nTUSnapshot.forEach(returnedDoc => {
           const data = returnedDoc.data()
           targetTokens.push(data.pushToken)
-          netTargetTokens.push(data.pushToken)
+          //netTargetTokens.push(data.pushToken)
           console.log(data.pushToken)
-          //var findItem = netTargetTokens.indexOf(data.pushToken);
-          //if (findItem == -1) {
-          //  netTargetTokens.push(data.pushToken);
-          //  console.log(data.pushToken);
-          //}
+          var findItem = netTargetTokens.indexOf(data.pushToken);
+          if (findItem == -1) {
+            netTargetTokens.push(data.pushToken);
+            console.log(data.pushToken);
+          }
       });
     });
   });
 });
+},[targetCategories]);
 
   
   // If you type something in the text box that is a color, the background will change to that
