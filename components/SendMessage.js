@@ -16,36 +16,50 @@ const MessageContent = (props) => {
 const SendMessage = () => {
   const [messageBody, setMessageBody] = useState("");
   //gotta get the context for this part instead , const [targetCategories, setTargetCategories] = 
-  const expoPushToken = RegisterExpoToken();
+  
+  //**** 
+  //const expoPushToken = RegisterExpoToken();
 
   //this should be replace with getting the id of the target categories from category toggler
-  const [targetCategories] = [1,100,2];
+  const targetCategories = [1,100,2];
+  const targetUids = [];
+  const targetTokens = [];
+  const netTargetTokens = [];
 
-  const [targetUids] = db.collection("user_categories").where("category_id", "array-contains", targetCategories)
-  .get()
-  .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          console.log(doc.id, " => ", doc.data());
-      });
-  })
-  .catch((error) => {
-      console.log("Error getting documents: ", error);
-  });
-
-  //getting the push tokens from database
-  const [expoPushTokens] = db.collection("user_pushId").where("uid", "array-contains", targetUids)
-  .get()
-  .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          console.log(doc.id, " => ", doc.data());
-      });
-  })
-  .catch((error) => {
-      console.log("Error getting documents: ", error);
-  });
+  const {uid} = db.collection("user_categories").where('category_id','in',targetCategories).onSnapshot(ucatsSnapshot => {
     
+    ucatsSnapshot.forEach(doc => {
+        const data = doc.data()
+        targetUids.push(data.uid)
+        console.log(data.uid)
+    });
+    const netTargetUids = [];
+    console.log(targetUids);
+    targetUids.forEach (value => {
+      var findItem = netTargetUids.indexOf(value);
+      if (findItem == -1) {
+        netTargetUids.push(value);
+      }
+    });
+    console.log(netTargetUids);
+    netTargetUids.forEach( value => {
+      db.collection("user_pushId").where('uid','==',value).onSnapshot(nTUSnapshot => {
+     
+      nTUSnapshot.forEach(value => {
+          const data = value.data()
+          targetTokens.push(data.pushToken)
+          console.log(data.pushToken)
+          var findItem = netTargetTokens.indexOf(value);
+          if (findItem == -1) {
+            netTargetTokens.push(value);
+            console.log(value);
+          }
+      });
+    });
+  });
+});
+
+  
   // If you type something in the text box that is a color, the background will change to that
   // color.
   return (
@@ -64,30 +78,31 @@ const SendMessage = () => {
       <Button
         title="Send Notification"
         onPress={async () => {
-          await sendPushNotification(expoPushToken);
+          await sendPushNotification(netTargetTokens);
         }}
       />
     </View>
   );
 
   // Can use this function below, OR use Expo's Push Notification Tool-> https://expo.dev/notifications
-  async function sendPushNotification(expoPushToken) {
-    const message = {
-      to: expoPushToken,
-      sound: "default",
-      title: "Message from Charity",
-      body: messageBody,
-      data: { messageBody },
-    };
-
-    await fetch("https://exp.host/--/api/v2/push/send", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Accept-encoding": "gzip, deflate",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(message),
+  async function sendPushNotification(netTargetTokens) {
+    netTargetTokens.forEach (targetToken => {
+      const message = {
+        to: targetToken,
+        sound: "default",
+        title: "Message from Charity",
+        body: messageBody,
+        data: { messageBody },
+      }
+      fetch("https://exp.host/--/api/v2/push/send", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Accept-encoding": "gzip, deflate",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(message),
+      });
     });
   }
 };
