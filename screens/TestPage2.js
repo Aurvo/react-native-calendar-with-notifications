@@ -1,13 +1,17 @@
 import React, { useContext, useState } from "react";
 import {
-  SafeAreaView,
   FlatList,
   View,
   Text,
   Switch,
   StyleSheet,
+  SafeAreaView,
+  VirtualizedList,
+  ScrollView,
 } from "react-native";
 import { GlobalContext } from "../contexts/GlobalContext";
+import SendMessage2 from "../components/SendMessage2";
+import HorizontalDivider from "../components/HorizontalDivider";
 
 const TestPage2 = () => {
   const { categories } = useContext(GlobalContext);
@@ -29,7 +33,7 @@ const TestPage2 = () => {
   }
 
   return (
-    <SafeAreaView>
+    <ScrollView>
       <FlatList
         style={{ padding: 20 }}
         data={names}
@@ -44,7 +48,10 @@ const TestPage2 = () => {
           />
         )}
       />
-    </SafeAreaView>
+      <HorizontalDivider />
+
+      <SendMessage2 />
+    </ScrollView>
   );
 };
 
