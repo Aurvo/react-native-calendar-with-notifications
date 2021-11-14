@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Button, TextInput, StyleSheet } from "react-native";
 import RegisterExpoToken from "../helpers/RegisterExpoToken";
+import { db, auth } from '../firebaseconfig';
 
 const MessageContent = (props) => {
   return (
@@ -14,8 +15,37 @@ const MessageContent = (props) => {
 
 const SendMessage = () => {
   const [messageBody, setMessageBody] = useState("");
+  //gotta get the context for this part instead , const [targetCategories, setTargetCategories] = 
   const expoPushToken = RegisterExpoToken();
 
+  //this should be replace with getting the id of the target categories from category toggler
+  const [targetCategories] = [1,100,2];
+
+  const [targetUids] = db.collection("user_categories").where("category_id", "array-contains", targetCategories)
+  .get()
+  .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          console.log(doc.id, " => ", doc.data());
+      });
+  })
+  .catch((error) => {
+      console.log("Error getting documents: ", error);
+  });
+
+  //getting the push tokens from database
+  const [expoPushTokens] = db.collection("user_pushId").where("uid", "array-contains", targetUids)
+  .get()
+  .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          console.log(doc.id, " => ", doc.data());
+      });
+  })
+  .catch((error) => {
+      console.log("Error getting documents: ", error);
+  });
+    
   // If you type something in the text box that is a color, the background will change to that
   // color.
   return (
