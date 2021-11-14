@@ -34,6 +34,7 @@ const SendMessage = () => {
         console.log(data.uid)
     });
     const netTargetUids = [];
+    console.log("targetUids:");
     console.log(targetUids);
     targetUids.forEach (value => {
       var findItem = netTargetUids.indexOf(value);
@@ -42,16 +43,19 @@ const SendMessage = () => {
       }
     });
     console.log(netTargetUids);
-    netTargetUids.forEach( value => {
-      db.collection("user_pushId").where('uid','==',value).onSnapshot(nTUSnapshot => {
-     
-      nTUSnapshot.forEach(value => {
-          const data = value.data()
+    netTargetUids.forEach( targetUid => {
+      db.collection("user_pushId").where('uid','==',targetUid).onSnapshot(nTUSnapshot => {
+      console.log(targetUid)
+      nTUSnapshot.forEach(returnedDoc => {
+          const data = returnedDoc.data()
           targetTokens.push(data.pushToken)
-          var findItem = netTargetTokens.indexOf(data.pushToken);
-          if (findItem == -1) {
-            netTargetTokens.push(data.pushToken);
-          }
+          netTargetTokens.push(data.pushToken)
+          console.log(data.pushToken)
+          //var findItem = netTargetTokens.indexOf(data.pushToken);
+          //if (findItem == -1) {
+          //  netTargetTokens.push(data.pushToken);
+          //  console.log(data.pushToken);
+          //}
       });
     });
   });
