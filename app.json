@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mobile-calendar-with-notifications",
-    "slug": "mobile-calendar-with-notifications",
+    "name": "mobile-calendar-with-notifications-fantastic4",
+    "slug": "mobile-calendar-with-notifications-fantastic4",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -29,6 +29,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": ""
   }
 }
