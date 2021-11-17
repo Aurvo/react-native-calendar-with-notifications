@@ -151,11 +151,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   container: {
-    padding: 10,
+    flex: 1,
+    justifyContent: "center",
+    margin: 10,
   },
   input: {
-    borderWidth: 0.5,
-    borderRadius: 0.5,
+    backgroundColor: "#efefefef",
+    fontSize: 12,
+    padding: 10,
+    borderColor: "#000000",
+    borderWidth: 1,
+    borderRadius: 8,
   },
 });
 
