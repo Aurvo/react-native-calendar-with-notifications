@@ -15,22 +15,41 @@ const MessageContent = (props) => {
 
 const SendMessage = ({ selectedCategories }) => {
   const [messageBody, setMessageBody] = useState("");
-  const targetCategories = selectedCategories.map(
-    (category) => category.category_id
-  );
+
+  function provideTrueCategoryId() {
+    const trueSelectedCategories = selectedCategories.filter(
+      (category) => category.isSubscribed === true
+    );
+    if (trueSelectedCategories.length === 0) {
+      return [99999];
+    }
+    if (trueSelectedCategories.length > 0) {
+      return trueSelectedCategories.map(
+        (trueSelectedCategory) => trueSelectedCategory.category_id
+      );
+    }
+  }
+  // trueSelectedCategories.forEach((t) =>
+  //   console.log("trueSelectedCategories: " + t.category_id)
+  // );
+  const targetCategories = provideTrueCategoryId();
   const targetUids = [];
   const targetTokens = [];
   const netTargetTokens = [];
 
+  // console.log("result of targetCategories v2: ");
+  // targetCategories.forEach((c) => console.log(c));
+  // console.log("targetCategory is array: " + Array.isArray(targetCategories));
+
   useEffect(() => {
     const { uid } = db
       .collection("user_categories")
-      .where("category_id", "in", targetCategories)
+      .where("category_id", "in", targetCategories) // [3])
       .onSnapshot((ucatsSnapshot) => {
         ucatsSnapshot.forEach((doc) => {
           const data = doc.data();
           targetUids.push(data.uid);
-          // console.log(data.uid)
+          // console.log(data.uid);
         });
         const netTargetUids = [];
         // console.log("targetUids:");
@@ -110,18 +129,33 @@ const SendMessage = ({ selectedCategories }) => {
 };
 
 const styles = StyleSheet.create({
+  heading__lg: {
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    paddingBottom: 5,
+    fontSize: 30,
+    fontWeight: "bold",
+  },
+  subheading: {
+    padding: 10,
+    marginBottom: 25,
+  },
+  group: {
+    padding: 10,
+    marginBottom: 15,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  group__item_text: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
   container: {
-    flex: 1,
-    justifyContent: "center",
-    margin: 10,
+    padding: 10,
   },
   input: {
-    backgroundColor: "#efefefef",
-    fontSize: 12,
-    padding: 10,
-    borderColor: "#000000",
-    borderWidth: 1,
-    borderRadius: 8,
+    borderWidth: 0.5,
+    borderRadius: 0.5,
   },
 });
 

@@ -84,7 +84,7 @@ const CategoryToggler = function CategoryToggler({
     );
   });
 
-  togglerList.forEach((t) => console.log(t));
+  // togglerList.forEach((t) => console.log(t));
 
   return <View>{togglerList}</View>;
 };
