@@ -1,61 +1,92 @@
-import React, { useContext } from "react";
+import React from "react";
 import { View, Text, Switch, StyleSheet } from "react-native";
-import HorizontalDivider from "../components/HorizontalDivider";
-import { GlobalContext } from "../contexts/GlobalContext";
 
-const CategoryToggler = function CategoryToggler() {
-  const names = [];
-  const { categories } = useContext(GlobalContext);
-
-  categories.forEach((element, index) => {
-    // console.log(element.label);
-    // console.log(index);
-    names[index] = element.label;
+const Toggler = ({
+  category,
+  selectedCategories,
+  onSelectedCategoriesChange,
+}) => {
+  const styles = StyleSheet.create({
+    heading__lg: {
+      paddingHorizontal: 10,
+      paddingTop: 10,
+      paddingBottom: 5,
+      fontSize: 30,
+      fontWeight: "bold",
+    },
+    subheading: {
+      padding: 10,
+      marginBottom: 25,
+    },
+    group: {
+      padding: 10,
+      marginBottom: 15,
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
+    group__item_text: {
+      fontSize: 18,
+      fontWeight: "bold",
+    },
   });
 
-  return names.map((name, index) => {
-    const [isGroupEnabled, setGroup] = React.useState(false);
+  function updateSelectedCategories(category) {
+    let t_selectedCategories = [...selectedCategories];
 
-    const styles = StyleSheet.create({
-      heading__lg: {
-        paddingHorizontal: 10,
-        paddingTop: 10,
-        paddingBottom: 5,
-        fontSize: 30,
-        fontWeight: "bold",
-      },
-      subheading: {
-        padding: 10,
-        marginBottom: 25,
-      },
-      group: {
-        padding: 10,
-        marginBottom: 15,
-        flexDirection: "row",
-        justifyContent: "space-between",
-      },
-      group__item_text: {
-        fontSize: 18,
-        fontWeight: "bold",
-      },
+    t_selectedCategories.forEach((t_category) => {
+      if (t_category.category_id === category.category_id) {
+        let index = t_selectedCategories.findIndex(
+          (element) => element.category_id === category.category_id
+        );
+        t_selectedCategories[index] = {
+          category_id: category.category_id,
+          category_name: category.category_name,
+          isSubscribed: !category.isSubscribed,
+        };
+        console.log(
+          "finished updating selectedCategories with new isSubscribed"
+        );
+      }
     });
 
+    return t_selectedCategories;
+  }
+
+  return (
+    <View style={styles.group}>
+      <Text style={styles.group__item_text} key={category.category_name}>
+        {" "}
+        {category.category_name}{" "}
+      </Text>
+      <Switch
+        key={`${category.category_name}___switch`}
+        value={category.isSubscribed}
+        onChange={(e) =>
+          onSelectedCategoriesChange(updateSelectedCategories(category))
+        }
+        trackColor={{ true: "green" }}
+      ></Switch>
+    </View>
+  );
+};
+
+const CategoryToggler = function CategoryToggler({
+  selectedCategories,
+  onSelectedCategoriesChange,
+}) {
+  const togglerList = selectedCategories.map((category) => {
     return (
-      <View>
-        <View style={styles.group}>
-          <Text style={styles.group__item_text}>{name}</Text>
-          <View style={styles.group__item_text}>
-            <Switch
-              value={isGroupEnabled}
-              onValueChange={(value) => setGroup(value)}
-              trackColor={{ true: "green" }}
-            ></Switch>
-          </View>
-        </View>
-        <HorizontalDivider />
-      </View>
+      <Toggler
+        category={category}
+        selectedCategories={selectedCategories}
+        onSelectedCategoriesChange={onSelectedCategoriesChange}
+      />
     );
   });
+
+  // togglerList.forEach((t) => console.log(t));
+
+  return <View>{togglerList}</View>;
 };
 
 export default CategoryToggler;
