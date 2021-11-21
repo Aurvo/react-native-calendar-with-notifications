@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Button, TextInput, StyleSheet } from "react-native";
-import RegisterExpoToken from "../helpers/RegisterExpoToken";
 import { db, auth } from "../firebaseconfig";
+import IdentifyPushTokens from "./IdentifyPushTokens";
 
 const MessageContent = (props) => {
   return (
@@ -13,11 +13,10 @@ const MessageContent = (props) => {
   );
 };
 
-const SendMessage = ({ selectedCategories }) => {
-  const [messageBody, setMessageBody] = useState("");
-
-  function provideTrueCategoryId() {
-    const trueSelectedCategories = selectedCategories.filter(
+const ProvideTrueCategoryId = () => {
+  useEffect(() => {
+    console.log(adminSelectedCategories);
+    const trueSelectedCategories = adminSelectedCategories.filter(
       (category) => category.isSubscribed === true
     );
     if (trueSelectedCategories.length === 0) {
@@ -28,11 +27,20 @@ const SendMessage = ({ selectedCategories }) => {
         (trueSelectedCategory) => trueSelectedCategory.category_id
       );
     }
-  }
+  
+  },[selectedCategories]);
+}
+
+const SendMessage = ({selectedCategories}) => {
+  const [messageBody, setMessageBody] = useState("");
+  const [adminSelectedCategories, setAdminSelectedCategories] = useState("");
+  
+  //setTrueSelectedCategories(selectedCategories);
   // trueSelectedCategories.forEach((t) =>
   //   console.log("trueSelectedCategories: " + t.category_id)
   // );
-  const targetCategories = provideTrueCategoryId();
+  //const targetCategories = provideTrueCategoryId();
+  /*
   const targetUids = [];
   const targetTokens = [];
   const netTargetTokens = [];
@@ -81,7 +89,7 @@ const SendMessage = ({ selectedCategories }) => {
         });
       });
   }, [targetCategories]);
-
+  */
   // If you type something in the text box that is a color, the background will change to that
   // color.
   return (
@@ -100,7 +108,8 @@ const SendMessage = ({ selectedCategories }) => {
       <Button
         title="Send Notification"
         onPress={async () => {
-          await sendPushNotification(netTargetTokens);
+          setAdminSelectedCategories(selectedCategories);
+          await sendPushNotification(IdentifyPushTokens(ProvideTrueCategoryId()));
         }}
       />
     </View>

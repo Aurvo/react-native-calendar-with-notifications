@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, Switch, StyleSheet } from "react-native";
+import SendMessage from "../components/SendMessage";
 
 const Toggler = ({
   category,
@@ -48,7 +49,7 @@ const Toggler = ({
         );
       }
     });
-
+    
     return t_selectedCategories;
   }
 
@@ -86,7 +87,9 @@ const CategoryToggler = function CategoryToggler({
 
   // togglerList.forEach((t) => console.log(t));
 
-  return <View>{togglerList}</View>;
+  return (<View>{togglerList}
+          </View>
+        );
 };
 
 export default CategoryToggler;
