@@ -35,7 +35,7 @@ const SendMessage = ({ selectedCategories }) => {
   const targetCategories = provideTrueCategoryId();
   const targetUids = [];
   const targetTokens = [];
-  const [netTargetTokens,setNetTargetTokens] = useState("");
+  const netTargetTokens = [];
 
   // console.log("result of targetCategories v2: ");
   // targetCategories.forEach((c) => console.log(c));
