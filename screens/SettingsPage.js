@@ -2,10 +2,9 @@ import { getExpoPushTokenAsync } from "expo-notifications";
 import React from "react";
 import {
   SafeAreaView,
-  ScrollView,
   View,
   Text,
-  StyleSheet,
+  StyleSheet
 } from "react-native";
 import CategoryPicker from "../components/CategoryPicker";
 import { db, auth } from "../firebaseconfig";
@@ -38,12 +37,12 @@ const writePushToken = (props) => {
 const SettingsPage = () => {
   writePushToken(RegisterExpoToken());
   return(
-    <ScrollView>
+    <SafeAreaView>
       <Text style={styles.subheading}>Identify which group notifications you would like to receive.</Text>
       <View style={styles.subheading}>
         <CategoryPicker />
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 }
 
