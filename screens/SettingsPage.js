@@ -25,8 +25,8 @@ const signIn = () => {
 signIn();
 
 const writePushToken = (props) => {
-  db.collection("user_pushId").where('uid',"==",auth.currentUser.uid).get().then((querySnapshot) => { 
-      db.collection("user_pushId").doc(auth.currentUser.uid).set({
+  db.collection("user_pushId").where('pushToken',"==",props).get().then((querySnapshot) => { 
+      db.collection("user_pushId").doc(props).set({
         pushToken: props,
         uid: auth.currentUser.uid
       })
