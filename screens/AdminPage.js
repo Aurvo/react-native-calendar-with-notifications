@@ -6,6 +6,8 @@ import EventSection from "./EventSection";
 import HorizontalDivider from "../components/HorizontalDivider";
 import { GlobalContext } from "../contexts/GlobalContext";
 
+// Root@root.com / rooter
+
 const AdminPage = () => {
   // const [isDonorEnabled, setDonor] = React.useState(false);
   // const [isVolunteerEnabled, setVolunteer] = React.useState(false);
@@ -80,7 +82,7 @@ const AdminPage = () => {
         <Text style={[styles.group__item_text, { padding: 10 }]}>
           Message To Subscribers
         </Text>
-        <SendMessage selectedCategories={selectedCategories} />
+        <SendMessage targetCategorIds={selectedCategories.filter(cat => cat.isSubscribed).map(cat => cat.category_id)} />
 
         <HorizontalDivider />
         <EventSection />
