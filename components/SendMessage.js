@@ -14,7 +14,7 @@ const MessageContent = (props) => {
 
 const SendMessage = ({ selectedCategories }) => {
   const [messageBody, setMessageBody] = useState("");
-  const [targetCategories, setTargetCategories] = useState(selectedCategories);
+  //const [targetCategories, setTargetCategories] = useState([]);
   const [finalTokens, setFinalTokens] = useState([]);
 
   function provideTrueCategoryId() {
@@ -32,8 +32,10 @@ const SendMessage = ({ selectedCategories }) => {
   }
 
   useEffect(() => {
-    
-    setTargetCategories(provideTrueCategoryId());
+    console.log("start");
+    console.log(targetCategories);
+    console.log("end");
+    const targetCategories = provideTrueCategoryId();
     const targetUids = [];
     const targetTokens = [];
     const netTargetTokens = [];
@@ -46,6 +48,7 @@ const SendMessage = ({ selectedCategories }) => {
       .onSnapshot((ucatsSnapshot) => {
         ucatsSnapshot.forEach((doc) => {
           const data = doc.data();
+          console.log("test");
           targetUids.push(data.uid);
         });
         const netTargetUids = [];
@@ -71,10 +74,9 @@ const SendMessage = ({ selectedCategories }) => {
             });
         });
       });
-  }
-  else {setFinalTokens([])};
+    }
+  }, [selectedCategories]);
 
-}, [messageBody]);
 
   // If you type something in the text box that is a color, the background will change to that
   // color.
@@ -94,35 +96,36 @@ const SendMessage = ({ selectedCategories }) => {
       <Button
         title="Send Notification"
         onPress={async () => {
-          await sendPushNotification(finalTokens);
+          await sendPushNotification();
         }}
       />
     </View>
   );
 
   // Can use this function below, OR use Expo's Push Notification Tool-> https://expo.dev/notifications
-  async function sendPushNotification(finalTokens) {
-    
-    console.log("sending to " + finalTokens);
-    const message = {
-      to: finalTokens,
-      sound: "default",
-      title: "Message from Charity",
-      body: messageBody,
-      data: { messageBody },
-    };
-    await fetch("https://exp.host/--/api/v2/push/send", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Accept-encoding": "gzip, deflate",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(message),
-    });
+  async function sendPushNotification() {
+      console.log("sending to categories" + selectedCategories)
+      console.log("sending to " + finalTokens);
+      const message = {
+        to: finalTokens,
+        sound: "default",
+        title: "Message from Charity",
+        body: messageBody,
+        data: { messageBody },
+      };
+      await fetch("https://exp.host/--/api/v2/push/send", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Accept-encoding": "gzip, deflate",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(message),
+      });
+    }
     //setFinalTokens([]);
-  }
-};
+  };
+
 
 const styles = StyleSheet.create({
   heading__lg: {
