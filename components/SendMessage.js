@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { View, Button, TextInput, StyleSheet } from "react-native";
-import RegisterExpoToken from "../helpers/RegisterExpoToken";
 import { db, auth } from "../firebaseconfig";
 
 const MessageContent = (props) => {
@@ -15,6 +14,8 @@ const MessageContent = (props) => {
 
 const SendMessage = ({ selectedCategories }) => {
   const [messageBody, setMessageBody] = useState("");
+  const [targetCategories, setTargetCategories] = useState(selectedCategories);
+  const [finalTokens, setFinalTokens] = useState([]);
 
   function provideTrueCategoryId() {
     const trueSelectedCategories = selectedCategories.filter(
@@ -29,58 +30,51 @@ const SendMessage = ({ selectedCategories }) => {
       );
     }
   }
-  // trueSelectedCategories.forEach((t) =>
-  //   console.log("trueSelectedCategories: " + t.category_id)
-  // );
-  const targetCategories = provideTrueCategoryId();
-  const targetUids = [];
-  const targetTokens = [];
-  const netTargetTokens = [];
-
-  // console.log("result of targetCategories v2: ");
-  // targetCategories.forEach((c) => console.log(c));
-  // console.log("targetCategory is array: " + Array.isArray(targetCategories));
 
   useEffect(() => {
-    const { uid } = db
+    
+    setTargetCategories(provideTrueCategoryId());
+    const targetUids = [];
+    const targetTokens = [];
+    const netTargetTokens = [];
+
+    if (targetCategories.length!==0) {
+    console.log("trying");
+      db
       .collection("user_categories")
       .where("category_id", "in", targetCategories) // [3])
       .onSnapshot((ucatsSnapshot) => {
         ucatsSnapshot.forEach((doc) => {
           const data = doc.data();
           targetUids.push(data.uid);
-          // console.log(data.uid);
         });
         const netTargetUids = [];
-        // console.log("targetUids:");
-        // console.log(targetUids);
         targetUids.forEach((value) => {
           var findItem = netTargetUids.indexOf(value);
           if (findItem == -1) {
             netTargetUids.push(value);
           }
         });
-        // console.log(netTargetUids);
         netTargetUids.forEach((targetUid) => {
           db.collection("user_pushId")
             .where("uid", "==", targetUid)
             .onSnapshot((nTUSnapshot) => {
-              // console.log(targetUid)
               nTUSnapshot.forEach((returnedDoc) => {
                 const data = returnedDoc.data();
                 targetTokens.push(data.pushToken);
-                //netTargetTokens.push(data.pushToken)
-                // console.log(data.pushToken)
                 var findItem = netTargetTokens.indexOf(data.pushToken);
                 if (findItem == -1) {
                   netTargetTokens.push(data.pushToken);
-                  // console.log(data.pushToken);
+                  setFinalTokens(netTargetTokens);
                 }
               });
             });
         });
       });
-  }, [targetCategories]);
+  }
+  else {setFinalTokens([])};
+
+}, [messageBody]);
 
   // If you type something in the text box that is a color, the background will change to that
   // color.
@@ -100,17 +94,18 @@ const SendMessage = ({ selectedCategories }) => {
       <Button
         title="Send Notification"
         onPress={async () => {
-          await sendPushNotification(netTargetTokens);
+          await sendPushNotification(finalTokens);
         }}
       />
     </View>
   );
 
   // Can use this function below, OR use Expo's Push Notification Tool-> https://expo.dev/notifications
-  async function sendPushNotification(netTargetTokens) {
-    console.log("sending to " + netTargetTokens);
+  async function sendPushNotification(finalTokens) {
+    
+    console.log("sending to " + finalTokens);
     const message = {
-      to: netTargetTokens,
+      to: finalTokens,
       sound: "default",
       title: "Message from Charity",
       body: messageBody,
@@ -125,6 +120,7 @@ const SendMessage = ({ selectedCategories }) => {
       },
       body: JSON.stringify(message),
     });
+    //setFinalTokens([]);
   }
 };
 
