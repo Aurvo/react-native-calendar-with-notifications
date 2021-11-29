@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, Button, TextInput, StyleSheet } from "react-native";
 import { db, auth } from "../firebaseconfig";
 
@@ -16,20 +16,24 @@ const SendMessage = ({ targetCategorIds }) => {
   const [messageBody, setMessageBody] = useState("");
   const [targetTokens, setTargetTokens] = useState([]);
 
+  console.log('test hahaha');
+  console.log('targetCategorIds', targetCategorIds);
   console.log('targetTokens', targetTokens);
 
   useEffect(() => {
+    if (!targetCategorIds || targetCategorIds.length == 0) return;
     db.collection("user_categories")
-      .where("category_id", "in", targetCategories) // [3])
+      .where("category_id", "in", targetCategorIds) // [3])
       .get().then(ucatsSnapshot => {
         const targetUidsSet = new Set(); // Impossible for Sets to have duplicates
         ucatsSnapshot.forEach(doc => {
           const data = doc.data();
           targetUidsSet.add(data.uid);
         });
+
         const firebasePromises = [];
         const targetTokensSet = new Set();
-        targetUids.forEach((targetUid) => {
+        targetUidsSet.forEach((targetUid) => {
           firebasePromises.push(
             db.collection("user_pushId")
               .where("uid", "==", targetUid)
@@ -44,6 +48,38 @@ const SendMessage = ({ targetCategorIds }) => {
         Promise.all(firebasePromises).then(() => setTargetTokens(Array.from(targetTokensSet)));
       });
   }, [targetCategorIds]);
+
+  // Can use this function below, OR use Expo's Push Notification Tool-> https://expo.dev/notifications
+  const sendPushNotification = useCallback(async () => {
+    console.log("sending to " + targetTokens);
+    if (!targetTokens || targetTokens.length === 0) return;
+    const title = "Message from Charity";
+    const message = {
+      to: targetTokens,
+      sound: "default",
+      title,
+      body: messageBody,
+      data: { messageBody },
+    };
+    const response = await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Accept-encoding": "gzip, deflate",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message),
+    });
+    // only add to notification history if message was sent out successfully
+    if (response.status === 200) {
+      db.collection('notifications').add({
+        title,
+        message: messageBody,
+        category_ids: targetCategorIds,
+        date: new Date() // now
+      });
+    }
+  });
 
   // If you type something in the text box that is a color, the background will change to that
   // color.
@@ -62,34 +98,10 @@ const SendMessage = ({ targetCategorIds }) => {
       </View>
       <Button
         title="Send Notification"
-        onPress={async () => {
-          await sendPushNotification(targetTokens);
-        }}
+        onPress={sendPushNotification}
       />
     </View>
   );
-
-  // Can use this function below, OR use Expo's Push Notification Tool-> https://expo.dev/notifications
-  async function sendPushNotification(netTargetTokens) {
-    console.log("sending to " + netTargetTokens);
-    if (!netTargetTokens || netTargetTokens.length === 0) return;
-    const message = {
-      to: netTargetTokens,
-      sound: "default",
-      title: "Message from Charity",
-      body: messageBody,
-      data: { messageBody },
-    };
-    await fetch("https://exp.host/--/api/v2/push/send", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Accept-encoding": "gzip, deflate",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(message),
-    });
-  }
 };
 
 const styles = StyleSheet.create({
