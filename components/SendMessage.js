@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, Button, TextInput, StyleSheet } from "react-native";
-import RegisterExpoToken from "../helpers/RegisterExpoToken";
 import { db, auth } from "../firebaseconfig";
 
 const MessageContent = (props) => {
@@ -13,74 +12,74 @@ const MessageContent = (props) => {
   );
 };
 
-const SendMessage = ({ selectedCategories }) => {
+const SendMessage = ({ targetCategorIds }) => {
   const [messageBody, setMessageBody] = useState("");
+  const [targetTokens, setTargetTokens] = useState([]);
 
-  function provideTrueCategoryId() {
-    const trueSelectedCategories = selectedCategories.filter(
-      (category) => category.isSubscribed === true
-    );
-    if (trueSelectedCategories.length === 0) {
-      return [99999];
-    }
-    if (trueSelectedCategories.length > 0) {
-      return trueSelectedCategories.map(
-        (trueSelectedCategory) => trueSelectedCategory.category_id
-      );
-    }
-  }
-  // trueSelectedCategories.forEach((t) =>
-  //   console.log("trueSelectedCategories: " + t.category_id)
-  // );
-  const targetCategories = provideTrueCategoryId();
-  const targetUids = [];
-  const targetTokens = [];
-  const netTargetTokens = [];
-
-  // console.log("result of targetCategories v2: ");
-  // targetCategories.forEach((c) => console.log(c));
-  // console.log("targetCategory is array: " + Array.isArray(targetCategories));
+  console.log('test hahaha');
+  console.log('targetCategorIds', targetCategorIds);
+  console.log('targetTokens', targetTokens);
 
   useEffect(() => {
-    const { uid } = db
-      .collection("user_categories")
-      .where("category_id", "in", targetCategories) // [3])
-      .onSnapshot((ucatsSnapshot) => {
-        ucatsSnapshot.forEach((doc) => {
+    if (!targetCategorIds || targetCategorIds.length == 0) return;
+    db.collection("user_categories")
+      .where("category_id", "in", targetCategorIds) // [3])
+      .get().then(ucatsSnapshot => {
+        const targetUidsSet = new Set(); // Impossible for Sets to have duplicates
+        ucatsSnapshot.forEach(doc => {
           const data = doc.data();
-          targetUids.push(data.uid);
-          // console.log(data.uid);
+          targetUidsSet.add(data.uid);
         });
-        const netTargetUids = [];
-        // console.log("targetUids:");
-        // console.log(targetUids);
-        targetUids.forEach((value) => {
-          var findItem = netTargetUids.indexOf(value);
-          if (findItem == -1) {
-            netTargetUids.push(value);
-          }
+
+        const firebasePromises = [];
+        const targetTokensSet = new Set();
+        targetUidsSet.forEach((targetUid) => {
+          firebasePromises.push(
+            db.collection("user_pushId")
+              .where("uid", "==", targetUid)
+              .get().then(uPushSnapshot => {
+                uPushSnapshot.forEach(doc => {
+                  const data = doc.data();
+                  targetTokensSet.add(data.pushToken);
+                });
+              })
+          );
         });
-        // console.log(netTargetUids);
-        netTargetUids.forEach((targetUid) => {
-          db.collection("user_pushId")
-            .where("uid", "==", targetUid)
-            .onSnapshot((nTUSnapshot) => {
-              // console.log(targetUid)
-              nTUSnapshot.forEach((returnedDoc) => {
-                const data = returnedDoc.data();
-                targetTokens.push(data.pushToken);
-                //netTargetTokens.push(data.pushToken)
-                // console.log(data.pushToken)
-                var findItem = netTargetTokens.indexOf(data.pushToken);
-                if (findItem == -1) {
-                  netTargetTokens.push(data.pushToken);
-                  // console.log(data.pushToken);
-                }
-              });
-            });
-        });
+        Promise.all(firebasePromises).then(() => setTargetTokens(Array.from(targetTokensSet)));
       });
-  }, [targetCategories]);
+  }, [targetCategorIds]);
+
+  // Can use this function below, OR use Expo's Push Notification Tool-> https://expo.dev/notifications
+  const sendPushNotification = useCallback(async () => {
+    console.log("sending to " + targetTokens);
+    if (!targetTokens || targetTokens.length === 0) return;
+    const title = "Message from Charity";
+    const message = {
+      to: targetTokens,
+      sound: "default",
+      title,
+      body: messageBody,
+      data: { messageBody },
+    };
+    const response = await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Accept-encoding": "gzip, deflate",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message),
+    });
+    // only add to notification history if message was sent out successfully
+    if (response.status === 200) {
+      db.collection('notifications').add({
+        title,
+        message: messageBody,
+        category_ids: targetCategorIds,
+        date: new Date() // now
+      });
+    }
+  });
 
   // If you type something in the text box that is a color, the background will change to that
   // color.
@@ -99,33 +98,10 @@ const SendMessage = ({ selectedCategories }) => {
       </View>
       <Button
         title="Send Notification"
-        onPress={async () => {
-          await sendPushNotification(netTargetTokens);
-        }}
+        onPress={sendPushNotification}
       />
     </View>
   );
-
-  // Can use this function below, OR use Expo's Push Notification Tool-> https://expo.dev/notifications
-  async function sendPushNotification(netTargetTokens) {
-    console.log("sending to " + netTargetTokens);
-    const message = {
-      to: netTargetTokens,
-      sound: "default",
-      title: "Message from Charity",
-      body: messageBody,
-      data: { messageBody },
-    };
-    await fetch("https://exp.host/--/api/v2/push/send", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Accept-encoding": "gzip, deflate",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(message),
-    });
-  }
 };
 
 const styles = StyleSheet.create({
