@@ -77,6 +77,7 @@ const CategoryToggler = function CategoryToggler({
   const togglerList = selectedCategories.map((category) => {
     return (
       <Toggler
+        key={`${category.category_name}___toggler`}
         category={category}
         selectedCategories={selectedCategories}
         onSelectedCategoriesChange={onSelectedCategoriesChange}
