@@ -1,5 +1,5 @@
 import { getExpoPushTokenAsync } from "expo-notifications";
-import React from "react";
+import React, {useContext} from 'react';
 import {
   SafeAreaView,
   View,
@@ -9,6 +9,9 @@ import {
 import CategoryPicker from "../components/CategoryPicker";
 import { db, auth } from "../firebaseconfig";
 import RegisterExpoToken from "../helpers/RegisterExpoToken";
+import { GlobalContext } from '../contexts/GlobalContext';
+
+
 
 const signIn = () => {
     auth.signInAnonymously()
@@ -25,10 +28,13 @@ const signIn = () => {
 signIn();
 
 const writePushToken = (props) => {
+  const {userSelectedCategories} = useContext(GlobalContext);
+  
   db.collection("user_pushId").where('pushToken',"==",props).get().then((querySnapshot) => { 
       db.collection("user_pushId").doc(props).set({
         pushToken: props,
-        uid: auth.currentUser.uid
+        uid: auth.currentUser.uid,
+        userSelectedCategories: userSelectedCategories
       })
   });
 };
