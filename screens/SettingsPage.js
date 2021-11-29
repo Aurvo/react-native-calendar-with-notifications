@@ -30,6 +30,8 @@ signIn();
 const writePushToken = (props) => {
   const {userSelectedCategories} = useContext(GlobalContext);
   
+  if(props && props.length>0 )
+  {
   db.collection("user_pushId").where('pushToken',"==",props).get().then((querySnapshot) => { 
       db.collection("user_pushId").doc(props).set({
         pushToken: props,
@@ -37,6 +39,7 @@ const writePushToken = (props) => {
         userSelectedCategories: userSelectedCategories
       })
   });
+  }
 };
 
 
