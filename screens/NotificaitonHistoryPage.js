@@ -1,18 +1,21 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useCallback} from 'react';
 import {View, Text, ScrollView, StyleSheet} from 'react-native';
 import {GlobalContext} from '../contexts/GlobalContext';
-import { db, } from '../firebaseconfig';
+import { db } from '../firebaseconfig';
 
 const NotificaitonHistoryPage = () => {
     const {userSelectedCategories} = useContext(GlobalContext);
     const [notifications, setNotifications] = useState([]);
+
+    // ensures snapshot always uses up to date subscribed category ids
+    const getUserSelectedCategoryIds = useCallback(() => userSelectedCategories.map(cat => cat.value), [userSelectedCategories]);
+
     useEffect(() => {
         if (userSelectedCategories.length === 0) { // 'array-contains-any' throws error with empty array
             setNotifications([]);
             return;
         }
-        const userSelectedCategoryIds = userSelectedCategories.map(cat => cat.value);
-        db.collection('notifications').where('category_ids', 'array-contains-any', userSelectedCategoryIds)
+        db.collection('notifications').where('category_ids', 'array-contains-any', getUserSelectedCategoryIds())
             .orderBy('date', 'desc').onSnapshot(notificationSnapshot => {
             const notifications = [];
             notificationSnapshot.forEach(doc => {
