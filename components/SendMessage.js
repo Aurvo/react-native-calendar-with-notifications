@@ -2,6 +2,9 @@ import React, { useState, useEffect, useCallback } from "react";
 import { View, Button, TextInput, StyleSheet } from "react-native";
 import { db, auth } from "../firebaseconfig";
 
+// title for text messages
+const title = "Message from Charity";
+
 const MessageContent = (props) => {
   return (
     <TextInput
@@ -14,46 +17,29 @@ const MessageContent = (props) => {
 
 const SendMessage = ({ targetCategorIds }) => {
   const [messageBody, setMessageBody] = useState("");
-  const [targetTokens, setTargetTokens] = useState([]);
-
-  console.log('test hahaha');
-  console.log('targetCategorIds', targetCategorIds);
-  console.log('targetTokens', targetTokens);
-
-  useEffect(() => {
-    if (!targetCategorIds || targetCategorIds.length == 0) return;
-    db.collection("user_categories")
-      .where("category_id", "in", targetCategorIds) // [3])
-      .get().then(ucatsSnapshot => {
-        const targetUidsSet = new Set(); // Impossible for Sets to have duplicates
-        ucatsSnapshot.forEach(doc => {
-          const data = doc.data();
-          targetUidsSet.add(data.uid);
-        });
-
-        const firebasePromises = [];
-        const targetTokensSet = new Set();
-        targetUidsSet.forEach((targetUid) => {
-          firebasePromises.push(
-            db.collection("user_pushId")
-              .where("uid", "==", targetUid)
-              .get().then(uPushSnapshot => {
-                uPushSnapshot.forEach(doc => {
-                  const data = doc.data();
-                  targetTokensSet.add(data.pushToken);
-                });
-              })
-          );
-        });
-        Promise.all(firebasePromises).then(() => setTargetTokens(Array.from(targetTokensSet)));
-      });
-  }, [targetCategorIds]);
 
   // Can use this function below, OR use Expo's Push Notification Tool-> https://expo.dev/notifications
   const sendPushNotification = useCallback(async () => {
+    if (!targetCategorIds || targetCategorIds.length == 0) return;
+    const ucatsSnapshot = await db.collection("user_categories")
+      .where("category_id", "in", targetCategorIds).get();
+    const targetUidsSet = new Set(); // Impossible for Sets to have duplicates
+    ucatsSnapshot.forEach(doc => {
+      const data = doc.data();
+      targetUidsSet.add(data.uid);
+    });
+    const targetTokensSet = new Set();
+    // getting entire collection and filtering using JavaScript, as agreed
+    const uPushSnapshot = await db.collection("user_pushId").get();
+    uPushSnapshot.forEach(doc => {
+      const data = doc.data();
+      if (targetUidsSet.has(data.uid)) {
+        targetTokensSet.add(data.pushToken);
+      }
+    });
+    const targetTokens = Array.from(targetTokensSet);
     console.log("sending to " + targetTokens);
     if (!targetTokens || targetTokens.length === 0) return;
-    const title = "Message from Charity";
     const message = {
       to: targetTokens,
       sound: "default",
@@ -78,6 +64,9 @@ const SendMessage = ({ targetCategorIds }) => {
         category_ids: targetCategorIds,
         date: new Date() // now
       });
+    } else {
+      const error = await response.json();
+      console.error('Error in sending message:', error);
     }
   });
 
