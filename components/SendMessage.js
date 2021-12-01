@@ -19,55 +19,55 @@ const SendMessage = ({ targetCategorIds }) => {
   const [messageBody, setMessageBody] = useState("");
 
   // Can use this function below, OR use Expo's Push Notification Tool-> https://expo.dev/notifications
-  const sendPushNotification = useCallback(async () => {
+  const sendPushNotification = useCallback(() => {
     if (!targetCategorIds || targetCategorIds.length == 0) return;
-    const ucatsSnapshot = await db.collection("user_categories")
-      .where("category_id", "in", targetCategorIds).get();
-    const targetUidsSet = new Set(); // Impossible for Sets to have duplicates
-    ucatsSnapshot.forEach(doc => {
-      const data = doc.data();
-      targetUidsSet.add(data.uid);
-    });
-    const targetTokensSet = new Set();
-    // getting entire collection and filtering using JavaScript, as agreed
-    const uPushSnapshot = await db.collection("user_pushId").get();
-    uPushSnapshot.forEach(doc => {
-      const data = doc.data();
-      if (targetUidsSet.has(data.uid)) {
-        targetTokensSet.add(data.pushToken);
-      }
-    });
-    const targetTokens = Array.from(targetTokensSet);
-    console.log("sending to " + targetTokens);
-    if (!targetTokens || targetTokens.length === 0) return;
-    const message = {
-      to: targetTokens,
-      sound: "default",
-      title,
-      body: messageBody,
-      data: { messageBody },
-    };
-    const response = await fetch("https://exp.host/--/api/v2/push/send", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Accept-encoding": "gzip, deflate",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(message),
-    });
-    // only add to notification history if message was sent out successfully
-    if (response.status === 200) {
-      db.collection('notifications').add({
-        title,
-        message: messageBody,
-        category_ids: targetCategorIds,
-        date: new Date() // now
+    db.collection("user_categories").where("category_id", "in", targetCategorIds).get().then(ucatsSnapshot => {
+      const targetUidsSet = new Set(); // Impossible for Sets to have duplicates
+      ucatsSnapshot.forEach(doc => {
+        const data = doc.data();
+        targetUidsSet.add(data.uid);
       });
-    } else {
-      const error = await response.json();
-      console.error('Error in sending message:', error);
-    }
+      const targetTokensSet = new Set();
+      // getting entire collection and filtering using JavaScript, as agreed
+      db.collection("user_pushId").get().then(uPushSnapshot => {
+        uPushSnapshot.forEach(doc => {
+          const data = doc.data();
+          if (targetUidsSet.has(data.uid)) {
+            targetTokensSet.add(data.pushToken);
+          }
+        });
+        const targetTokens = Array.from(targetTokensSet);
+        if (!targetTokens || targetTokens.length === 0) return;
+        const message = {
+          to: targetTokens,
+          sound: "default",
+          title,
+          body: messageBody,
+          data: { messageBody },
+        };
+        fetch("https://exp.host/--/api/v2/push/send", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Accept-encoding": "gzip, deflate",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(message),
+        }).then(response => {
+          // only add to notification history if message was sent out successfully
+          if (response.status === 200) {
+            db.collection('notifications').add({
+              title,
+              message: messageBody,
+              category_ids: targetCategorIds,
+              date: new Date() // now
+            });
+          } else {
+            response.json().then(error => console.error('Error in sending message:', error));
+          }
+        });
+      });
+    });
   });
 
   // If you type something in the text box that is a color, the background will change to that
