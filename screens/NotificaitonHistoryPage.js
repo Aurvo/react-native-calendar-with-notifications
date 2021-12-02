@@ -7,15 +7,13 @@ const NotificaitonHistoryPage = () => {
     const {userSelectedCategories} = useContext(GlobalContext);
     const [notifications, setNotifications] = useState([]);
 
-    // ensures snapshot always uses up to date subscribed category ids
-    const getUserSelectedCategoryIds = useCallback(() => userSelectedCategories.map(cat => cat.value), [userSelectedCategories]);
-
     useEffect(() => {
         if (userSelectedCategories.length === 0) { // 'array-contains-any' throws error with empty array
             setNotifications([]);
             return;
         }
-        db.collection('notifications').where('category_ids', 'array-contains-any', getUserSelectedCategoryIds())
+        const userSelectedCategoryIds = userSelectedCategories.map(cat => cat.value)
+        const unsubscribeFromSnapshotCallback = db.collection('notifications').where('category_ids', 'array-contains-any', userSelectedCategoryIds)
             .orderBy('date', 'desc').onSnapshot(notificationSnapshot => {
             const notifications = [];
             notificationSnapshot.forEach(doc => {
@@ -24,6 +22,7 @@ const NotificaitonHistoryPage = () => {
             });
             setNotifications(notifications);
         });
+        return unsubscribeFromSnapshotCallback;
     }, [userSelectedCategories]);
     return (<ScrollView style={styles.page}>
         <Text style={styles.header1}>Notification History</Text>

@@ -10,9 +10,11 @@ export const globalContextWrapper = (WrappedComponent) => {
             userSelectedCategories: [],
             shouldRefreshEvents: true
         }
+
+        unsubscribeSnapshotListener = null
           
         componentDidMount() {
-            db.collection("categories").onSnapshot(catsSnapshot => {
+            this.unsubscribeSnapshotListener = db.collection("categories").onSnapshot(catsSnapshot => {
                 const categories = [];
                 catsSnapshot.forEach(doc => {
                     const data = doc.data()
@@ -31,6 +33,10 @@ export const globalContextWrapper = (WrappedComponent) => {
                     this.setState({categories, userSelectedCategories});
                 });
             });
+        }
+
+        componentWillUnmount() {
+            this.unsubscribeSnapshotListener();
         }
         
         onSelectionChange = (userSelectedCategories, selectedCategory) => {
