@@ -18,3 +18,4 @@ firebase.js
 environment/config.js
 firebaseconfig.js
 google-services.json
+firebase.json

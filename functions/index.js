@@ -5,11 +5,91 @@ const functions = require("firebase-functions");
 const googleCredentials = require("./credentials.json");
 const cors = require("cors")({origin: true});
 
+const admin = require("firebase-admin");
+admin.initializeApp();
+const db = admin.firestore();
+const fetch = require("node-fetch");
+
 const ERROR_RESPONSE = {
   status: "500",
   message: "There was an error adding an event to your Google calendar",
 };
 const TIME_ZONE = "EST";
+
+// eslint-disable-next-line require-jsdoc
+function sendMessage(targetCategorIds, messageBody, title) {
+  if (!targetCategorIds || targetCategorIds.length == 0) return;
+  return db.collection("user_categories")
+      .where("category_id", "in", targetCategorIds).get()
+      .then((ucatsSnapshot) => {
+        const targetUidsSet=new Set(); // Impossible for Sets to have duplicates
+        ucatsSnapshot.forEach((doc) => {
+          const data = doc.data();
+          targetUidsSet.add(data.uid);
+        });
+        const targetTokensSet = new Set();
+        // getting entire collection and filtering using JavaScript, as agreed
+        db.collection("user_pushId").get().then((uPushSnapshot) => {
+          uPushSnapshot.forEach((doc) => {
+            const data = doc.data();
+            if (targetUidsSet.has(data.uid)) {
+              targetTokensSet.add(data.pushToken);
+            }
+          });
+          const targetTokens = Array.from(targetTokensSet);
+          if (!targetTokens || targetTokens.length === 0) return;
+          const message = {
+            to: targetTokens,
+            sound: "default",
+            title,
+            body: messageBody,
+            data: {messageBody},
+          };
+          fetch("https://exp.host/--/api/v2/push/send", {
+            method: "POST",
+            headers: {
+              "Accept": "application/json",
+              "Accept-encoding": "gzip, deflate",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(message),
+          }).then((response) => {
+          // eslint-disable-next-line max-len
+          // only add to notification history if message was sent out successfully
+            if (response.status === 200) {
+              db.collection("notifications").add({
+                title,
+                message: messageBody,
+                category_ids: targetCategorIds,
+                date: new Date(), // now
+              });
+            } else {
+              response.json()
+                  // eslint-disable-next-line max-len
+                  .then((error) => console.error("Error in sending message:", error));
+            }
+          });
+        });
+      });
+}
+
+exports.sendMessage = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    const targetCategorIds = request.body.targetCategorIds;
+    const title = request.body.title;
+    const messageBody = request.body.messageBody;
+
+    sendMessage(targetCategorIds, messageBody, title).then((data) => {
+      response.status(200).send(data);
+      return;
+    }).catch((err) => {
+      console.error("Error sending notification: " + err.message);
+      response.status(500).send(ERROR_RESPONSE);
+      return;
+    });
+  });
+});
+
 
 /**
 * Create calendar event
