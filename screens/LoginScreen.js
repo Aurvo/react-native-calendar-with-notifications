@@ -36,6 +36,7 @@ const LoginScreen = () => {
           value={email}
           onChangeText={(text) => setEmail(text)}
           style={styles.input}
+          placeholderTextColor="darkgrey"
         />
 
         <TextInput
@@ -43,6 +44,7 @@ const LoginScreen = () => {
           value={password}
           onChangeText={(text) => setPassword(text)}
           style={styles.input}
+          placeholderTextColor="darkgrey"
           secureTextEntry
         />
       </View>
