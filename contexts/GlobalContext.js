@@ -20,16 +20,14 @@ export const globalContextWrapper = (WrappedComponent) => {
                     const data = doc.data()
                     categories.push({label: data.name, value: data.id})
                 });
-                console.log('auth', auth);
                 const uid = auth.currentUser.uid;
                 const userSelectedCategories = [];
                 db.collection("user_categories").where('uid', '==', uid).get().then(uCatsSnapshot => {
                     uCatsSnapshot.forEach(doc => {
                         const data = doc.data();
-                        console.log('ucat data', data);
-                        userSelectedCategories.push(categories.find(c => c.value === data.category_id));
+                        const matchingCategory = categories.find(c => c.value === data.category_id);
+                        if (matchingCategory) userSelectedCategories.push(matchingCategory);
                     });
-                    console.log('userSelectedCategories', userSelectedCategories);
                     this.setState({categories, userSelectedCategories});
                 });
             });
