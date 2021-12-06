@@ -5,7 +5,6 @@ import { GlobalContext } from '../contexts/GlobalContext';
 
 const CategoryPicker = () => {
   const {categories, userSelectedCategories, onSelectionChange} = useContext(GlobalContext);
-  console.log('categories', categories);
   return (
     <View>
       <SelectMultiple
