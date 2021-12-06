@@ -1,0 +1,43 @@
+//This entire file should be replaced with a download from Google API 
+//See documentation here: https://docs.expo.dev/push-notifications/using-fcm/
+
+{
+  "project_info": {
+    "project_number": "xxx",
+    "firebase_url": "xxx",
+    "project_id": "xxx",
+    "storage_bucket": "xxx"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "xxx",
+        "android_client_info": {
+          "package_name": "xxxx"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "xxxx",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_P-mGefwOeP2z9188NfgWmrdk1S3TiMA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "xxx",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
